@@ -38,30 +38,43 @@ public class DefaultService {
         log.info("memoryLeak is starting");
         for (int i = 0; i < 10000000; i++) {
             if(i%10000==0) {
-                log.info("memory overflow - i: {}", i);
+                log.info("memory overflow - cnt: {}", i);
             }
             memoryleakList.add(Math.random());
         }
     }
 
+
     public void cpuLoad() {
 
         log.info("cpuLoad is starting");
 
-        int numCore = 4;
-        int numThreadsPerCore = 2;
-        double load = 0.8;
-        final long duration = 600000;
-        for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
-            new BusyThread("Thread" + thread, load, duration).start();
-        }
+        final long duration = 10*1000;  // 5초동안
+        double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
+        new CpuLoad("Thread", load, duration).start();
+
+        log.info("cpuLoad is done");
     }
 
-    private static class BusyThread extends Thread {
+    public void cpuLoadForOnePod() {
+
+        log.info("cpuLoadForOnePod is starting");
+
+        final long duration = 60*1000;  // 1분동안
+        double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
+
+        for (int thread = 0; thread < 4; thread++) {
+            new CpuLoad("Thread" + thread, load, duration).start();
+        }
+        log.info("cpuLoadForOnePod is done");
+    }
+
+    private static class CpuLoad extends Thread {
         private double load;
         private long duration;
+        private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-        public BusyThread(String name, double load, long duration) {
+        public CpuLoad(String name, double load, long duration) {
             super(name);
             this.load = load;
             this.duration = duration;
@@ -75,8 +88,9 @@ public class DefaultService {
                 while (System.currentTimeMillis() - startTime < duration) {
                     // Every 100ms, sleep for the percentage of unladen time
                     if (System.currentTimeMillis() % 100 == 0) {
-                        System.out.printf("cpuLoad is sleept");
-                        Thread.sleep((long) Math.floor((1 - load) * 100));
+                        long sleepMillis = (long)Math.floor((1 - load) * 100);
+                        log.info("cpu sleep - Millis: {}", sleepMillis);
+                        Thread.sleep(sleepMillis);
                     }
                 }
             } catch (InterruptedException e) {
