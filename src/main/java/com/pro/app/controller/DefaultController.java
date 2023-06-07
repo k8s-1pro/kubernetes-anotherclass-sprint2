@@ -47,6 +47,11 @@ public class DefaultController {
         defaultService.memoryLeak();
     }
 
+    @GetMapping("/cpu-load")
+    public void cpuLoad(){
+        defaultService.cpuLoad();
+    }
+
     @GetMapping(value="/database", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object>  database() throws JsonProcessingException {

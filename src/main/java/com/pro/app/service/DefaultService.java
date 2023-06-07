@@ -43,4 +43,45 @@ public class DefaultService {
             memoryleakList.add(Math.random());
         }
     }
+
+    public void cpuLoad() {
+
+        log.info("cpuLoad is starting");
+
+        int numCore = 4;
+        int numThreadsPerCore = 2;
+        double load = 0.8;
+        final long duration = 600000;
+        for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
+            new BusyThread("Thread" + thread, load, duration).start();
+        }
+    }
+
+    private static class BusyThread extends Thread {
+        private double load;
+        private long duration;
+
+        public BusyThread(String name, double load, long duration) {
+            super(name);
+            this.load = load;
+            this.duration = duration;
+        }
+
+        @Override
+        public void run() {
+            long startTime = System.currentTimeMillis();
+            try {
+                // Loop for the given duration
+                while (System.currentTimeMillis() - startTime < duration) {
+                    // Every 100ms, sleep for the percentage of unladen time
+                    if (System.currentTimeMillis() % 100 == 0) {
+                        System.out.printf("cpuLoad is sleept");
+                        Thread.sleep((long) Math.floor((1 - load) * 100));
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
