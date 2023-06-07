@@ -18,6 +18,21 @@ spec:
         - name: app-1-2-2-1
           image: 1pro/app
           imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: http
+          livenessProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: http
+          readinessProbe:
+            httpGet:
+              path: "/actuator/health/readiness"
+              port: http
           resources:
             requests:
               memory: "200Mi"
