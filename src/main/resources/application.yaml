@@ -9,7 +9,7 @@ management:
   endpoint:
     health:
       probes:
-        enabled: false
+        enabled: true
 
 database:
   username: local
