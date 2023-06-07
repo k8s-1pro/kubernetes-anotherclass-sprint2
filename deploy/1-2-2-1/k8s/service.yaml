@@ -8,7 +8,7 @@ spec:
     section: 2
     class: 2
     step: 1
-    app: app-1-2-2-1
+    app: 1.2.2.1
   ports:
     - port: 8080
       targetPort: 8080
