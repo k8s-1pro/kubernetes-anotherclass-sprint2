@@ -18,10 +18,10 @@ public class DefaultService {
     @PostConstruct
     public void startupTime() {
 
-        // App 기동시간 (10초에서 20초가 걸리도록)
+        // App 기동시간 (5초에서 10초가 걸리도록)
         Random random = new Random();
-        int min = 1000*1;
-        int max = 1000*2;
+        int min = 1000*5;
+        int max = 1000*10;
 
         int randomCnt = random.nextInt(max - min + 1) + min;
 
