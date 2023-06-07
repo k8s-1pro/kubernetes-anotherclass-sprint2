@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dev
 
 server:
   servlet:
@@ -14,8 +14,8 @@ management:
         enabled: true
 
 database:
-  username: local
-  password: local
+  username: dev
+  password: dev
   server:
-    ip: 10.10.10.0
+    ip: 10.10.10.1
     port: 1234

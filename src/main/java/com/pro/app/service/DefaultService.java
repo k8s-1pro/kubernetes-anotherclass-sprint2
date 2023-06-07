@@ -36,8 +36,8 @@ public class DefaultService {
 
     public void memoryLeak() {
         log.info("memoryLeak is starting");
-        for (int i = 0; i < 1000000; i++) {
-            if(i%10==0) {
+        for (int i = 0; i < 10000000; i++) {
+            if(i%10000==0) {
                 log.info("memory overflow - i: {}", i);
             }
             memoryleakList.add(Math.random());
