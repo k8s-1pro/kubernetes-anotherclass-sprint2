@@ -3,15 +3,13 @@ spring:
     active: local
 
 server:
-  servlet:
-    context-path: /app
   port: 8080
 
 management:
   endpoint:
     health:
       probes:
-        enabled: false
+        enabled: true
 
 database:
   username: local
