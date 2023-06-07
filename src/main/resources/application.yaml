@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    active: dev
+
+server:
+  servlet:
+    context-path: /app
+  port: 8080
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+database:
+  username: dev
+  password: dev
+  server:
+    ip: 10.10.10.1
+    port: 1234
