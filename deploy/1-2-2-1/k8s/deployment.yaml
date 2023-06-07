@@ -2,32 +2,32 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    part: 1
-    section: 2
-    class: 2
-    step: 1
-    app: 1.2.2.1
+    part: '1'
+    section: '2'
+    class: '2'
+    step: '1'
+    app: '1.2.2.1'
     heritage: 1pro
   name: app-1-2-2-1
 spec:
   selector:
     matchLabels:
-      part: 1
-      section: 2
-      class: 2
-      step: 1
-      app: 1.2.2.1
+      part: '1'
+      section: '2'
+      class: '2'
+      step: '1'
+      app: '1.2.2.1'
   replicas: 2
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        part: 1
-        section: 2
-        class: 2
-        step: 1
-        app: 1.2.2.1
+        part: '1'
+        section: '2'
+        class: '2'
+        step: '1'
+        app: '1.2.2.1'
     spec:
       containers:
         - name: app-1-2-2-1
