@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 @RestController
 public class DefaultController {
 
@@ -30,15 +27,7 @@ public class DefaultController {
 
     @GetMapping("/hostname")
     public String hostname(){
-        String hostname = "";
-        InetAddress inetadd = null;
-        try {
-            inetadd = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-        hostname = inetadd.getHostName();
-        return hostname;
+        return defaultService.hostname();
     }
 
 

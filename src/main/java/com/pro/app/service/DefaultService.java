@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +16,20 @@ public class DefaultService {
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public static List<Double> memoryleakList = new ArrayList<>();
+
+
+    public String hostname(){
+        String hostname = "";
+        InetAddress inetadd = null;
+        try {
+            inetadd = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+        hostname = inetadd.getHostName();
+        return hostname;
+    }
+
 
     @PostConstruct
     public void startupTime() {
@@ -35,7 +51,7 @@ public class DefaultService {
     }
 
     public void memoryLeak() {
-        log.info("memoryLeak is starting");
+        log.info("{} : memoryLeak is starting", this.hostname());
         for (int i = 0; i < 10000000; i++) {
             if(i%10000==0) {
                 log.info("memory overflow - cnt: {}", i);
@@ -47,18 +63,16 @@ public class DefaultService {
 
     public void cpuLoad() {
 
-        log.info("cpuLoad is starting");
+        log.info("{} : cpuLoad is starting", this.hostname());
 
         final long duration = 10*1000;  // 5초동안
         double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
         new CpuLoad("Thread", load, duration).start();
-
-        log.info("cpuLoad is done");
     }
 
     public void cpuLoadForOnePod() {
 
-        log.info("cpuLoadForOnePod is starting");
+        log.info("{} : cpuLoadForOnePod is starting", this.hostname());
 
         final long duration = 60*1000;  // 1분동안
         double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
@@ -66,7 +80,7 @@ public class DefaultService {
         for (int thread = 0; thread < 4; thread++) {
             new CpuLoad("Thread" + thread, load, duration).start();
         }
-        log.info("cpuLoadForOnePod is done");
+        log.info("{} : cpuLoadForOnePod is done", this.hostname());
     }
 
     private static class CpuLoad extends Thread {
@@ -89,7 +103,7 @@ public class DefaultService {
                     // Every 100ms, sleep for the percentage of unladen time
                     if (System.currentTimeMillis() % 100 == 0) {
                         long sleepMillis = (long)Math.floor((1 - load) * 100);
-                        log.info("cpu sleep - Millis: {}", sleepMillis);
+                        //log.info("cpu sleep - Millis: {}", sleepMillis);
                         Thread.sleep(sleepMillis);
                     }
                 }
