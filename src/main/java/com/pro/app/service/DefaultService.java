@@ -66,7 +66,7 @@ public class DefaultService {
         log.info("{} : cpuLoad is starting", this.hostname());
 
         final long duration = 10*1000;  // 5초동안
-        double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
+        double load = 1;  // 부하를 100%정도로 유지하도록 설정
         new CpuLoad("Thread", load, duration).start();
     }
 
