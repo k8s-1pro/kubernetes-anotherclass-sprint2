@@ -41,11 +41,6 @@ public class DefaultController {
         defaultService.cpuLoad();
     }
 
-    @GetMapping("/cpu-load-one")
-    public void cpuLoadForOnePod(){
-        defaultService.cpuLoadForOnePod();
-    }
-
     @GetMapping(value="/database", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object>  database() throws JsonProcessingException {
