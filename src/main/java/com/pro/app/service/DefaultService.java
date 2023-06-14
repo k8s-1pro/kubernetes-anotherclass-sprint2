@@ -63,15 +63,15 @@ public class DefaultService {
 
     public void cpuLoad() {
 
-        log.info("{} : cpuLoadForOnePod is starting", this.hostname());
+        log.info("{} : cpuLoad is starting", this.hostname());
 
-        final long duration = 60*1000;  // 1분동안
+        final long duration = 3*60*1000;  // 3분동안
         double load = 0.9;  // 부하를 90%정도로 유지하도록 설정
 
-        for (int thread = 0; thread < 6; thread++) {
+        for (int thread = 0; thread < 20; thread++) {
             new CpuLoad("Thread" + thread, load, duration).start();
         }
-        log.info("{} : cpuLoadForOnePod is done", this.hostname());
+        log.info("{} : cpuLoad is done", this.hostname());
     }
 
 
