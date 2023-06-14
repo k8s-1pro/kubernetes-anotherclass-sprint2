@@ -66,7 +66,8 @@ public class DefaultService {
         log.info("{} : cpuLoad is starting", this.hostname());
 
         final long duration = 10*1000;  // 5초동안
-        double load = 1;  // 부하를 100%정도로 유지하도록 설정
+        double load = 0.9;  // 부하를 90%정도로 유지하도록 설정
+        new CpuLoad("Thread", load, duration).start();
         new CpuLoad("Thread", load, duration).start();
     }
 
@@ -77,7 +78,7 @@ public class DefaultService {
         final long duration = 60*1000;  // 1분동안
         double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
 
-        for (int thread = 0; thread < 4; thread++) {
+        for (int thread = 0; thread < 6; thread++) {
             new CpuLoad("Thread" + thread, load, duration).start();
         }
         log.info("{} : cpuLoadForOnePod is done", this.hostname());
@@ -102,9 +103,7 @@ public class DefaultService {
                 while (System.currentTimeMillis() - startTime < duration) {
                     // Every 100ms, sleep for the percentage of unladen time
                     if (System.currentTimeMillis() % 100 == 0) {
-                        long sleepMillis = (long)Math.floor((1 - load) * 100);
-                        //log.info("cpu sleep - Millis: {}", sleepMillis);
-                        Thread.sleep(sleepMillis);
+                        Thread.sleep((long) Math.floor((1 - load) * 100));
                     }
                 }
             } catch (InterruptedException e) {
