@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,8 +38,8 @@ public class DefaultController {
     }
 
     @GetMapping("/cpu-load")
-    public void cpuLoad(){
-        defaultService.cpuLoad();
+    public void cpuLoad(@RequestParam(defaultValue = "3") int min, @RequestParam(defaultValue = "10") int thread){
+        defaultService.cpuLoad(min, thread);
     }
 
     @GetMapping(value="/database", produces = MediaType.APPLICATION_JSON_VALUE)
