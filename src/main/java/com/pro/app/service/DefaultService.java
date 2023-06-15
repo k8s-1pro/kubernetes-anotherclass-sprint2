@@ -1,7 +1,7 @@
 package com.pro.app.service;
 
 import com.pro.app.component.CpuLoad;
-import com.pro.app.component.MemoryLeak;
+import com.pro.app.component.ObjectForLeak;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -49,13 +51,22 @@ public class DefaultService {
         log.info("App is started : {} Sec", randomCnt / 1000);
     }
 
+    static List<ObjectForLeak> leak = new ArrayList<>();
+
 
     public void memoryLeak() {
 
         log.info("{} : memoryLeak is starting", this.hostname());
 
-        MemoryLeak memoryLeak = new MemoryLeak();
-        memoryLeak.run();
+   //     MemoryLeak memoryLeak = new MemoryLeak();
+    //    memoryLeak.run();
+
+
+        while(true) {
+            leak.add(new ObjectForLeak());
+        }
+
+
     }
 
 
