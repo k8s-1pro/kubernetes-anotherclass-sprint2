@@ -21,9 +21,7 @@ public class CpuLoad {
     public void run() {
         long startTime = System.currentTimeMillis();
         try {
-            // Loop for the given duration
             while (System.currentTimeMillis() - startTime < duration) {
-                // Every 100ms, sleep for the percentage of unladen time
                 if (System.currentTimeMillis() % 100 == 0) {
                     Thread.sleep((long) Math.floor((1 - load) * 100));
                 }

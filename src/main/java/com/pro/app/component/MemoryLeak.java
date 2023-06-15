@@ -12,7 +12,6 @@ public class MemoryLeak {
         Integer i = 0;
         while (true) {
             memorableList.put(i, new MemoryLeak.Memory(i));
-            System.out.println("leaking object " + memorableList.get(i).index);
             i++;
         }
     }
