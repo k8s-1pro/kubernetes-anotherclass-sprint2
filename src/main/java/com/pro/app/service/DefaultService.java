@@ -66,7 +66,6 @@ public class DefaultService {
             leak.add(new ObjectForLeak());
         }
 
-
     }
 
 
@@ -75,10 +74,10 @@ public class DefaultService {
         log.info("{} : cpuLoad is starting", this.hostname());
 
         final long duration = min*60*1000;  // 3분동안
-        double load = 0.8;  // 부하를 90%정도로 유지하도록 설정
+        double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
 
         for (int cnt = 0; cnt < thread; cnt++) {
-            new CpuLoad("Thread" + cnt, load, duration).run();
+            new CpuLoad("Thread" + cnt, load, duration).start();
         }
         log.info("{} : cpuLoad is done", this.hostname());
     }
