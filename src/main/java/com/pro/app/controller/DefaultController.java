@@ -38,7 +38,7 @@ public class DefaultController {
     }
 
     @GetMapping("/cpu-load")
-    public void cpuLoad(@RequestParam(defaultValue = "3") int min, @RequestParam(defaultValue = "10") int thread){
+    public void cpuLoad(@RequestParam(defaultValue = "2") int min, @RequestParam(defaultValue = "10") int thread){
         defaultService.cpuLoad(min, thread);
     }
 
