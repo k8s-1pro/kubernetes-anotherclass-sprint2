@@ -1,5 +1,7 @@
 package com.pro.app.service;
 
+import com.pro.app.component.CpuLoad;
+import com.pro.app.component.MemoryLeak;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,15 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 @Service
 public class DefaultService {
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    public static List<Double> memoryleakList = new ArrayList<>();
 
 
     public String hostname(){
@@ -50,14 +49,13 @@ public class DefaultService {
         log.info("App is started : {} Sec", randomCnt / 1000);
     }
 
+
     public void memoryLeak() {
+
         log.info("{} : memoryLeak is starting", this.hostname());
-        for (int i = 0; i < 10000000; i++) {
-            if(i%10000==0) {
-                log.info("memory overflow - cnt: {}", i);
-            }
-            memoryleakList.add(Math.random());
-        }
+
+        MemoryLeak memoryLeak = new MemoryLeak();
+        memoryLeak.run();
     }
 
 
@@ -69,37 +67,10 @@ public class DefaultService {
         double load = 0.8;  // 부하를 90%정도로 유지하도록 설정
 
         for (int cnt = 0; cnt < thread; cnt++) {
-            new CpuLoad("Thread" + cnt, load, duration).start();
+            new CpuLoad("Thread" + cnt, load, duration).run();
         }
         log.info("{} : cpuLoad is done", this.hostname());
     }
 
 
-    private static class CpuLoad extends Thread {
-        private double load;
-        private long duration;
-        private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
-
-        public CpuLoad(String name, double load, long duration) {
-            super(name);
-            this.load = load;
-            this.duration = duration;
-        }
-
-        @Override
-        public void run() {
-            long startTime = System.currentTimeMillis();
-            try {
-                // Loop for the given duration
-                while (System.currentTimeMillis() - startTime < duration) {
-                    // Every 100ms, sleep for the percentage of unladen time
-                    if (System.currentTimeMillis() % 100 == 0) {
-                        Thread.sleep((long) Math.floor((1 - load) * 100));
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
