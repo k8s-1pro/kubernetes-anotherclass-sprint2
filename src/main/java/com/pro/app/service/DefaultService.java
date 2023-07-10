@@ -71,9 +71,10 @@ public class DefaultService {
 
     public void cpuLoad(int min, int thread) {
 
-        log.info("{} : cpuLoad is starting", this.hostname());
-
         final long duration = min*60*1000;  // 3분동안
+
+        log.info("{} : cpuLoad is starting ({} min)", this.hostname(), duration);
+
         double load = 0.8;  // 부하를 80%정도로 유지하도록 설정
 
         for (int cnt = 0; cnt < thread; cnt++) {

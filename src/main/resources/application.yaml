@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dev
 
 server:
   port: 8080
@@ -10,10 +10,3 @@ management:
     health:
       probes:
         enabled: true
-
-database:
-  username: local
-  password: local
-  server:
-    ip: 10.10.10.0
-    port: 1234
