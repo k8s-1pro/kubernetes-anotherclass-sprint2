@@ -11,12 +11,5 @@ management:
       probes:
         enabled: true
 
-
 application:
-  role: "test"
-
-datasource:
-  driver-class-name: ""
-  url: ""
-  username: ""
-  password: ""
+  role: "all"

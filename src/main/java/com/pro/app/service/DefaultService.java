@@ -8,11 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -60,17 +65,10 @@ public class DefaultService {
 
 
     public void memoryLeak() {
-
         log.info("{} : memoryLeak is starting", this.hostname());
-
-   //     MemoryLeak memoryLeak = new MemoryLeak();
-    //    memoryLeak.run();
-
-
         while(true) {
             leak.add(new ObjectForLeak());
         }
-
     }
 
 
@@ -88,6 +86,25 @@ public class DefaultService {
         log.info("{} : cpuLoad is done", this.hostname());
     }
 
+    @PostConstruct
+    public void datasourceSecretLoad() {
+        Yaml y = new Yaml();
+        Reader yamlFile = null;
+        try {
+            yamlFile = new FileReader("/usr/src/myapp/datasource/postgresql-info.yaml");
+        } catch (FileNotFoundException e) {
+
+        }
+        System.out.println("ddd");
+        if (yamlFile != null) {
+            Map<String, Object> yamlMaps = y.load(yamlFile);
+
+            datasourceProperties.setDriverClassName(yamlMaps.get("driver-class-name").toString());
+            datasourceProperties.setUrl(yamlMaps.get("url").toString());
+            datasourceProperties.setUsername(yamlMaps.get("username").toString());
+            datasourceProperties.setPassword(yamlMaps.get("password").toString());
+        }
+    }
 
 
 }
