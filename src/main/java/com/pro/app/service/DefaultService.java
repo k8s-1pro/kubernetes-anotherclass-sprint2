@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 
@@ -86,16 +87,19 @@ public class DefaultService {
         log.info("{} : cpuLoad is done", this.hostname());
     }
 
+    @Value(value = "${filepath.postgresql}")
+    private String filepathPostgresql;
+
     @PostConstruct
     public void datasourceSecretLoad() {
         Yaml y = new Yaml();
         Reader yamlFile = null;
         try {
-            yamlFile = new FileReader("/usr/src/myapp/datasource/postgresql-info.yaml");
+            yamlFile = new FileReader(filepathPostgresql);
         } catch (FileNotFoundException e) {
 
         }
-        System.out.println("ddd");
+
         if (yamlFile != null) {
             Map<String, Object> yamlMaps = y.load(yamlFile);
 

@@ -13,3 +13,6 @@ management:
 
 application:
   role: "all"
+
+filepath:
+  postgresql:
