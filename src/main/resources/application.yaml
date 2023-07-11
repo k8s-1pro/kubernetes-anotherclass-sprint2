@@ -16,3 +16,10 @@ application:
 
 filepath:
   postgresql:
+  persistent-volume-data:
+
+datasource:
+  driver-class-name:
+  url:
+  username:
+  password:

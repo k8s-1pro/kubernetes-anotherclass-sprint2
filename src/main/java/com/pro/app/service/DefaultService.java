@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -110,5 +108,47 @@ public class DefaultService {
         }
     }
 
+    @Value(value = "${filepath.persistent-volume-data}")
+    private String filepathPersistentVolumeData;
+    public String getPersistentVolumeFiles() {
+
+
+        File file = new File(filepathPersistentVolumeData);
+        String[] files = file.list();
+        String filenameList = "";
+        for (String filename : files) {
+            filenameList =   filename + ", " +  filenameList;
+        }
+        return filenameList;
+    }
+
+    public String createPersistentVolumeFile() {
+
+        String randomStr = "";
+
+        for( int i=0 ; i< 10 ; i++){
+            char sValue = (char)((int)(Math.random()*26)+97);
+            randomStr += String.valueOf(sValue);
+        }
+
+
+        String filename = filepathPersistentVolumeData + randomStr + ".txt";
+
+        System.out.println(filename);
+
+        File file = new File(filename);
+
+        try {
+            if (file.createNewFile()) {
+                System.out.println("File created");
+            } else {
+                System.out.println("File already exists");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return getPersistentVolumeFiles();
+    }
 
 }

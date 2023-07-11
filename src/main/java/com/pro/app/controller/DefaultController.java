@@ -47,11 +47,24 @@ public class DefaultController {
         defaultService.cpuLoad(min, thread);
     }
 
-
     @GetMapping(value="/database-info")
     @ResponseBody
     public ResponseEntity<Object> databaseInfo() {
         String name = datasourceProperties.getDriverClassName();
         return ResponseEntity.ok(datasourceProperties.toString());
+    }
+
+    @GetMapping(value="/create-file")
+    @ResponseBody
+    public ResponseEntity<Object> createFile() {
+        String filenameList = defaultService.createPersistentVolumeFile();
+        return ResponseEntity.ok(filenameList);
+    }
+
+    @GetMapping(value="/list-file")
+    @ResponseBody
+    public ResponseEntity<Object> listFile() {
+        String filenameList = defaultService.getPersistentVolumeFiles();
+        return ResponseEntity.ok(filenameList);
     }
 }
