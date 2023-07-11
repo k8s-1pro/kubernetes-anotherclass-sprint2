@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: 1-2-3-1
+  name: api-tester
+  labels:
+    app.kubernetes.io/part-of: anotherclass-simple-app
+    app.kubernetes.io/component: backend-server
+    app.kubernetes.io/name: api-tester
+    app.kubernetes.io/instance: "1-2-3-1"
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: kubectl
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: anotherclass-simple-app
+      app.kubernetes.io/component: backend-server
+      app.kubernetes.io/name: api-tester
+      app.kubernetes.io/instance: "1-2-3-1"
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: anotherclass-simple-app
+        app.kubernetes.io/component: backend-server
+        app.kubernetes.io/name: api-tester
+        app.kubernetes.io/instance: "1-2-3-1"
+        app.kubernetes.io/version: "1.0.0"
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k8s-master
+      containers:
+        - name: api-tester
+          image: 1pro/api-tester:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: api-tester-spring-properties
+            - secretRef:
+                name: api-tester-spring-properties
+          startupProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: http
+            failureThreshold: 20
+          livenessProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: http
+          readinessProbe:
+            httpGet:
+              path: "/actuator/health/readiness"
+              port: http
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+              cpu: "200m"
+          volumeMounts:
+            - name: files
+              mountPath: /usr/src/myapp
+        volumes:
+          - name: files
+            persistentVolumeClaim:
+              claimName: api-tester-files
