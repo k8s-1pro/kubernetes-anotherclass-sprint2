@@ -66,7 +66,7 @@ spec:
           volumeMounts:
             - name: files
               mountPath: /usr/src/myapp
-        volumes:
-          - name: files
-            persistentVolumeClaim:
-              claimName: api-tester-files
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: api-tester-files
