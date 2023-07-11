@@ -10,6 +10,11 @@ metadata:
     app.kubernetes.io/instance: "1-2-3-1"
     app.kubernetes.io/version: "1.0.0"
 spec:
+  resources:
+    requests:
+      storage: 2G
+  accessModes:
+    - ReadWriteOnce
   selector:
     matchLabels:
       app.kubernetes.io/part-of: anotherclass-simple-app

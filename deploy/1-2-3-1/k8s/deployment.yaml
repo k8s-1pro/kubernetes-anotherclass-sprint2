@@ -41,8 +41,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: api-tester-spring-properties
-            - secretRef:
-                name: api-tester-spring-properties
           startupProbe:
             httpGet:
               path: "/actuator/health/liveness"
@@ -65,8 +63,13 @@ spec:
               cpu: "200m"
           volumeMounts:
             - name: files
-              mountPath: /usr/src/myapp
+              mountPath: /usr/src/myapp/files
+            - name: secret-datasource
+              mountPath: /usr/src/myapp/datasource
       volumes:
         - name: files
           persistentVolumeClaim:
             claimName: api-tester-files
+        - name: secret-datasource
+          secret:
+              secretName: api-tester-spring-properties-postgresql
