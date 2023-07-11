@@ -117,7 +117,7 @@ public class DefaultService {
         String[] files = file.list();
         String filenameList = "";
         for (String filename : files) {
-            filenameList =   filename + ", " +  filenameList;
+            filenameList =   filename + " " +  filenameList;
         }
         return filenameList;
     }
