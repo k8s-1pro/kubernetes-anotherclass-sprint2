@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: local
 
 server:
   port: 8080
@@ -10,3 +10,13 @@ management:
     health:
       probes:
         enabled: true
+
+
+application:
+  role: "test"
+
+datasource:
+  driver-class-name: ""
+  url: ""
+  username: ""
+  password: ""

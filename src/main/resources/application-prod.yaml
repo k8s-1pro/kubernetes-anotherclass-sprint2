@@ -1,6 +1,0 @@
-# PostgreSQL DB 설정
-datasource:
-  driver-class-name: "org.postgresql.Driver"
-  url: "jdbc:postgresql://postgresql:5433"
-  username: "prod"
-  password: "prod"

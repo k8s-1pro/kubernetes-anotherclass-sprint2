@@ -2,9 +2,11 @@ package com.pro.app.service;
 
 import com.pro.app.component.CpuLoad;
 import com.pro.app.component.ObjectForLeak;
+import com.pro.app.domain.DatasourceProperties;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
@@ -16,7 +18,8 @@ import java.util.Random;
 @Service
 public class DefaultService {
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
-
+    @Autowired
+    private DatasourceProperties datasourceProperties;
 
 
     public String hostname(){
@@ -49,6 +52,8 @@ public class DefaultService {
             throw new RuntimeException(e);
         }
         log.info("App is started : {} Sec", randomCnt / 1000);
+
+
     }
 
     static List<ObjectForLeak> leak = new ArrayList<>();
@@ -82,6 +87,7 @@ public class DefaultService {
         }
         log.info("{} : cpuLoad is done", this.hostname());
     }
+
 
 
 }

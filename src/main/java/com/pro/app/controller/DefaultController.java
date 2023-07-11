@@ -3,6 +3,7 @@ package com.pro.app.controller;
 import com.pro.app.domain.DatasourceProperties;
 import com.pro.app.service.DefaultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,13 @@ public class DefaultController {
         return defaultService.hostname();
     }
 
+    @Value(value = "${application.role}")
+    private String applicationRole;
+
+    @GetMapping("/application-role")
+    public String applicationRole(){
+        return applicationRole;
+    }
 
     @GetMapping("/memory-leak")
     public void memoryLeak(){
@@ -40,11 +48,10 @@ public class DefaultController {
     }
 
 
-    @GetMapping(value="/database")
+    @GetMapping(value="/database-info")
     @ResponseBody
-    public ResponseEntity<Object> database() {
+    public ResponseEntity<Object> databaseInfo() {
         String name = datasourceProperties.getDriverClassName();
         return ResponseEntity.ok(datasourceProperties.toString());
     }
-
 }
