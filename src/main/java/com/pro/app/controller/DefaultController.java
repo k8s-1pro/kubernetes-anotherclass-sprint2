@@ -27,6 +27,8 @@ public class DefaultController {
 
     @Value(value = "${application.role}")
     private String applicationRole;
+    @Value(value = "${application.version}")
+    private String applicationVersion;
 
 
     @GetMapping("/hello")
@@ -60,6 +62,10 @@ public class DefaultController {
     @GetMapping("/application-role")
     public String applicationRole(){
         return applicationRole;
+    }
+    @GetMapping("/version")
+    public String applicationVersion(){
+        return applicationVersion;
     }
 
     @GetMapping(value="/database-info")
