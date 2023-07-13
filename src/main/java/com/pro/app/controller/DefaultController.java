@@ -61,12 +61,13 @@ public class DefaultController {
 
     @GetMapping("/application-role")
     public String applicationRole(){
-        String returnString = "[Application Role] \nCurrent : " + applicationRole + "\nDefault : ALL \nOption: GET, POST, PUT, DELETE";
+        String returnString = "[Application Role] <br>" + applicationRole + "<br> (option: ALL, GET, POST, PUT, DELETE)";
         return  returnString;
     }
     @GetMapping("/version")
     public String applicationVersion(){
-        return applicationVersion;
+        String returnString = "[Application Version] <br>" + applicationVersion ;
+        return returnString;
     }
 
     @GetMapping(value="/database-info")
