@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/version: 1.0.0
     app.kubernetes.io/managed-by: kubectl
 data:
-  application-version: "App v1.0.0"
+  application-version: "Api Tester v1.0.0"
   spring-profiles-active: "dev"
   application-role: "all"
   postgresql-file-path: "/usr/src/myapp/datasource/postgresql-info.yaml"
