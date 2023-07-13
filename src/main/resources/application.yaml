@@ -9,13 +9,14 @@ application:
   role: "ALL"
   version: "Api Tester v2.0.0"
 
-filepath:
-  postgresql:
-  persistent-volume-data:
-  temp-volume-data:
-
 datasource:
   driver-class-name:
   url:
   username:
   password:
+
+filepath:
+  postgresql:
+  persistent-volume-data:
+  temp-volume-data:
+

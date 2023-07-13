@@ -123,25 +123,27 @@ public class DefaultService {
 
     public String createVolumeFile(String path) {
 
+        // 10자리 임의 문자 만들기
         String randomStr = "";
-
         for( int i=0 ; i< 10 ; i++){
             char sValue = (char)((int)(Math.random()*26)+97);
             randomStr += String.valueOf(sValue);
         }
 
+        // 폴더 생성
+        File filePath = new File(path);
+        if(!filePath.exists()) {
+            filePath.mkdir();
+        }
 
+        // 문자로 파일명 생성
         String filename = path + randomStr + ".txt";
-
-        System.out.println(filename);
-
         File file = new File(filename);
-
         try {
             if (file.createNewFile()) {
-                System.out.println("File created");
+                log.info("File created");
             } else {
-                System.out.println("File already exists");
+                log.info("File already exists");
             }
         } catch (IOException e) {
             e.printStackTrace();

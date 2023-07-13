@@ -29,6 +29,8 @@ public class DefaultController {
     private String applicationRole;
     @Value(value = "${application.version}")
     private String applicationVersion;
+    @Value(value = "${spring.profiles.active}")
+    private String applicationProfile;
 
 
     @GetMapping("/hello")
@@ -60,21 +62,59 @@ public class DefaultController {
 
 
     @GetMapping("/application-role")
-    public String applicationRole(){
-        String returnString = "[Application Role] <br>" + applicationRole + "<br> (option: ALL, GET, POST, PUT, DELETE)";
-        return  returnString;
+    public ResponseEntity<Object> applicationRole(){
+        String returnString = "[Application Role] : " + applicationRole + "<br> (option: ALL, GET, POST, PUT, DELETE)";
+        return ResponseEntity.ok(returnString);
+    }
+    @GetMapping("/profile")
+    public ResponseEntity<Object> applicationProfile(){
+        String returnString = "[Application profile] : " + applicationProfile
+                + "<br><br><b>application.yaml :</b> Common properties"
+                + "<br>---"
+                + "<br>datasource:"
+                + "<br>&nbsp;&nbsp;driver-class-name:"
+                + "<br>&nbsp;&nbsp;url:"
+                + "<br>&nbsp;&nbsp;username:"
+                + "<br>&nbsp;&nbsp;password:"
+                + "<br>filepath:"
+                + "<br>&nbsp;&nbsp;postgresql: "
+                + "<br>&nbsp;&nbsp;persistent-volume-data:"
+                + "<br>&nbsp;&nbsp;temp-volume-data:"
+                + "<br><br>"
+                + "<br><b>application-dev.yaml :</b> Dev properties"
+                + "<br>---"
+                + "<br>filepath:"
+                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/dev/files/\""
+                + "<br>&nbsp;&nbsp;temp-volume-data: \"/usr/src/myapp/dev/tmp/\""
+                + "<br><br>"
+                + "<br><b>application-qa.yaml :</b> QA properties"
+                + "<br>---"
+                + "<br>filepath:"
+                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/qa/files/\""
+                + "<br>&nbsp;&nbsp;temp-volume-data: \"/usr/src/myapp/qa/tmp/\""
+                + "<br><br>"
+                + "<br><b>application-prod.yaml :</b> Prod properties"
+                + "<br>---"
+                + "<br>filepath:"
+                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/prod/files/\""
+                + "<br>&nbsp;&nbsp;temp-volume-data: \"/usr/src/myapp/prod/tmp/\"";
+        return ResponseEntity.ok(returnString);
     }
     @GetMapping("/version")
-    public String applicationVersion(){
-        String returnString = "[Application Version] <br>" + applicationVersion ;
-        return returnString;
+    public ResponseEntity<Object> applicationVersion(){
+        String returnString = "[Application Version] : " + applicationVersion ;
+        return ResponseEntity.ok(returnString);
     }
 
     @GetMapping(value="/database-info")
     @ResponseBody
     public ResponseEntity<Object> databaseInfo() {
-        String name = datasourceProperties.getDriverClassName();
-        return ResponseEntity.ok(datasourceProperties.toString());
+        String returnString = "[Database Properties]"
+                            + "<br>driver-class-name : " + datasourceProperties.getDriverClassName()
+                            + "<br>url : "  + datasourceProperties.getUrl()
+                            + "<br>username : "  + datasourceProperties.getUsername()
+                            + "<br>password : "  + datasourceProperties.getPassword();
+        return ResponseEntity.ok(returnString);
     }
 
     @GetMapping(value="/create-pv-file")
