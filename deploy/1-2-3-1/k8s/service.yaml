@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: anotherclass-1231
+  namespace: anotherclass-123
   name: api-tester-1231
   labels:
     app.kubernetes.io/part-of: k8s-anotherclass
