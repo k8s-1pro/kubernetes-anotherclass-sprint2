@@ -40,7 +40,7 @@ spec:
               containerPort: 8080
           envFrom:
             - configMapRef:
-                name: api-tester-spring-properties
+                name: api-tester-1231-properties
           startupProbe:
             httpGet:
               path: "/ready"
@@ -69,7 +69,7 @@ spec:
       volumes:
         - name: files
           persistentVolumeClaim:
-            claimName: api-tester-files
+            claimName: api-tester-1231-files
         - name: secret-datasource
           secret:
-              secretName: api-tester-spring-properties-postgresql
+              secretName: api-tester-1231-postgresql

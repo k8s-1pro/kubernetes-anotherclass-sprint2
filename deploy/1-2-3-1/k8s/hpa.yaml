@@ -14,7 +14,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: api-tester
+    name: api-tester-1231
   minReplicas: 1
   maxReplicas: 2
   metrics:
