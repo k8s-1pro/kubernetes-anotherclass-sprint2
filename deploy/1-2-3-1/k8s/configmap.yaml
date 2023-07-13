@@ -11,5 +11,5 @@ metadata:
     app.kubernetes.io/managed-by: kubectl
 data:
   spring-profiles-active: "dev"
-  application-role: "all"
+  application-role: "ALL"
   postgresql-file-path: "/usr/src/myapp/datasource/postgresql-info.yaml"
