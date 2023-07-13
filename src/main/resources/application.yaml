@@ -5,12 +5,6 @@ spring:
 server:
   port: 8080
 
-management:
-  endpoint:
-    health:
-      probes:
-        enabled: true
-
 application:
   role: "all"
 

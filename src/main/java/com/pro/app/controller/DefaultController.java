@@ -19,9 +19,15 @@ public class DefaultController {
     @Autowired
     private DefaultService defaultService;
 
-    @GetMapping("hello")
+    @GetMapping("/hello")
     public String hello(){
-        return "Hello Kubernetes!";
+        return "Hello! I'm 1pro!";
+    }
+
+    @GetMapping("/ready")
+    @ResponseBody
+    public ResponseEntity<Object> ready() {
+        return ResponseEntity.ok("ok");
     }
 
     @GetMapping("/hostname")
