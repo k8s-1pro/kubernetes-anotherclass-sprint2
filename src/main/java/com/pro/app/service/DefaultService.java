@@ -111,10 +111,13 @@ public class DefaultService {
 
     public String getVolumeFiles(String path) {
 
-
         File file = new File(path);
         String[] files = file.list();
         String filenameList = "";
+        if (files == null){
+            return filenameList;
+        }
+
         for (String filename : files) {
             filenameList =   filename + " " +  filenameList;
         }
@@ -129,13 +132,12 @@ public class DefaultService {
             char sValue = (char)((int)(Math.random()*26)+97);
             randomStr += String.valueOf(sValue);
         }
-
+        log.info("File created:"  + path);
         // 폴더 생성
         File filePath = new File(path);
         if(!filePath.exists()) {
             filePath.mkdir();
         }
-
         // 문자로 파일명 생성
         String filename = path + randomStr + ".txt";
         File file = new File(filename);
