@@ -7,7 +7,6 @@ metadata:
     app.kubernetes.io/component: backend-server
     app.kubernetes.io/name: api-tester
     app.kubernetes.io/instance: api-tester-1231
-    app.kubernetes.io/version: 1.0.0
     app.kubernetes.io/managed-by: kubectl
 spec:
   capacity:
