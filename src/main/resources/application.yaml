@@ -11,6 +11,7 @@ application:
 filepath:
   postgresql:
   persistent-volume-data:
+  temp-volume-data:
 
 datasource:
   driver-class-name:

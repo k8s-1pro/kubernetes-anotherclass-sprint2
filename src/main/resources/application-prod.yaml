@@ -1,3 +1,4 @@
 
 filepath:
   persistent-volume-data: "/usr/src/myapp/prod/files/"
+  temp-volume-data: "/usr/src/myapp/prod/tmp/"

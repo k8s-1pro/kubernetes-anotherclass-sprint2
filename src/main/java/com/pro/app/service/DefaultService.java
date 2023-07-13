@@ -108,12 +108,11 @@ public class DefaultService {
         }
     }
 
-    @Value(value = "${filepath.persistent-volume-data}")
-    private String filepathPersistentVolumeData;
-    public String getPersistentVolumeFiles() {
+
+    public String getVolumeFiles(String path) {
 
 
-        File file = new File(filepathPersistentVolumeData);
+        File file = new File(path);
         String[] files = file.list();
         String filenameList = "";
         for (String filename : files) {
@@ -122,7 +121,7 @@ public class DefaultService {
         return filenameList;
     }
 
-    public String createPersistentVolumeFile() {
+    public String createVolumeFile(String path) {
 
         String randomStr = "";
 
@@ -132,7 +131,7 @@ public class DefaultService {
         }
 
 
-        String filename = filepathPersistentVolumeData + randomStr + ".txt";
+        String filename = path + randomStr + ".txt";
 
         System.out.println(filename);
 
@@ -148,7 +147,7 @@ public class DefaultService {
             e.printStackTrace();
         }
 
-        return getPersistentVolumeFiles();
+        return getVolumeFiles(path);
     }
 
 }

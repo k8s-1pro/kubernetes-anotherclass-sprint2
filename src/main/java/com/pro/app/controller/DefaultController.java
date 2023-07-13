@@ -19,6 +19,16 @@ public class DefaultController {
     @Autowired
     private DefaultService defaultService;
 
+    @Value(value = "${filepath.persistent-volume-data}")
+    private String filepathPersistentVolumeData;
+
+    @Value(value = "${filepath.temp-volume-data}")
+    private String filepathTempVolumeData;
+
+    @Value(value = "${application.role}")
+    private String applicationRole;
+
+
     @GetMapping("/hello")
     public String hello(){
         return "Hello! I'm 1pro!";
@@ -35,14 +45,6 @@ public class DefaultController {
         return defaultService.hostname();
     }
 
-    @Value(value = "${application.role}")
-    private String applicationRole;
-
-    @GetMapping("/application-role")
-    public String applicationRole(){
-        return applicationRole;
-    }
-
     @GetMapping("/memory-leak")
     public void memoryLeak(){
         defaultService.memoryLeak();
@@ -53,6 +55,13 @@ public class DefaultController {
         defaultService.cpuLoad(min, thread);
     }
 
+
+
+    @GetMapping("/application-role")
+    public String applicationRole(){
+        return applicationRole;
+    }
+
     @GetMapping(value="/database-info")
     @ResponseBody
     public ResponseEntity<Object> databaseInfo() {
@@ -60,17 +69,31 @@ public class DefaultController {
         return ResponseEntity.ok(datasourceProperties.toString());
     }
 
-    @GetMapping(value="/create-file")
+    @GetMapping(value="/create-pv-file")
     @ResponseBody
-    public ResponseEntity<Object> createFile() {
-        String filenameList = defaultService.createPersistentVolumeFile();
+    public ResponseEntity<Object> createPvFile() {
+        String filenameList = defaultService.createVolumeFile(filepathPersistentVolumeData);
         return ResponseEntity.ok(filenameList);
     }
 
-    @GetMapping(value="/list-file")
+    @GetMapping(value="/list-pv-file")
     @ResponseBody
-    public ResponseEntity<Object> listFile() {
-        String filenameList = defaultService.getPersistentVolumeFiles();
+    public ResponseEntity<Object> listPvFile() {
+        String filenameList = defaultService.getVolumeFiles(filepathPersistentVolumeData);
+        return ResponseEntity.ok(filenameList);
+    }
+
+    @GetMapping(value="/create-temp-file")
+    @ResponseBody
+    public ResponseEntity<Object> createTempFile() {
+        String filenameList = defaultService.createVolumeFile(filepathTempVolumeData);
+        return ResponseEntity.ok(filenameList);
+    }
+
+    @GetMapping(value="/list-temp-file")
+    @ResponseBody
+    public ResponseEntity<Object> listTempFile() {
+        String filenameList = defaultService.getVolumeFiles(filepathTempVolumeData);
         return ResponseEntity.ok(filenameList);
     }
 }

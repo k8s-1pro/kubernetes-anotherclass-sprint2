@@ -7,3 +7,4 @@ datasource:
 
 filepath:
   persistent-volume-data: "C:\\data\\local\\"
+  temp-volume-data: "C:\\data\\temp\\"
