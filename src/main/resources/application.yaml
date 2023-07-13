@@ -18,5 +18,5 @@ datasource:
 filepath:
   postgresql:
   persistent-volume-data:
-  temp-volume-data:
+  pod-volume-data:
 

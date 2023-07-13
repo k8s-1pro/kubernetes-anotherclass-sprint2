@@ -109,7 +109,7 @@ public class DefaultService {
     }
 
 
-    public String getVolumeFiles(String path) {
+    public String listFiles(String path) {
 
         File file = new File(path);
         String[] files = file.list();
@@ -124,7 +124,7 @@ public class DefaultService {
         return filenameList;
     }
 
-    public String createVolumeFile(String path) {
+    public String createFile(String path) {
 
         // 10자리 임의 문자 만들기
         String randomStr = "";
@@ -151,7 +151,7 @@ public class DefaultService {
             e.printStackTrace();
         }
 
-        return getVolumeFiles(path);
+        return listFiles(path);
     }
 
 }
