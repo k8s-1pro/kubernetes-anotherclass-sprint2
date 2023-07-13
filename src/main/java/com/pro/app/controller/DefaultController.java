@@ -61,7 +61,8 @@ public class DefaultController {
 
     @GetMapping("/application-role")
     public String applicationRole(){
-        return applicationRole;
+        String returnString = "[Application Role] \nCurrent : " + applicationRole + "\nDefault : ALL \nOption: GET, POST, PUT, DELETE";
+        return  returnString;
     }
     @GetMapping("/version")
     public String applicationVersion(){
