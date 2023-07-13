@@ -5,14 +5,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: '1-2-2-1'
+      app: '1.2.2.1'
   replicas: 2
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: '1-2-2-1'
+        app: '1.2.2.1'
     spec:
       containers:
         - name: app-1-2-2-1
@@ -23,16 +23,16 @@ spec:
               containerPort: 8080
           startupProbe:
             httpGet:
-              path: "/actuator/health/liveness"
+              path: "/ready"
               port: http
-            failureThreshold: 20
+            failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: "/actuator/health/liveness"
+              path: "/ready"
               port: http
           readinessProbe:
             httpGet:
-              path: "/actuator/health/readiness"
+              path: "/ready"
               port: http
           resources:
             requests:

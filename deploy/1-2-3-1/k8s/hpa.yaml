@@ -1,21 +1,22 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  namespace: 1-2-3-1
-  name: api-tester-default
+  namespace: anotherclass-123
+  name: api-tester-1231-default
   labels:
-    app.kubernetes.io/part-of: anotherclass-simple-app
+    app.kubernetes.io/part-of: k8s-anotherclass
     app.kubernetes.io/component: backend-server
     app.kubernetes.io/name: api-tester
-    app.kubernetes.io/instance: "1-2-3-1"
-    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/instance: api-tester-1231
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: kubectl
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: api-tester
-  minReplicas: 2
-  maxReplicas: 4
+  minReplicas: 1
+  maxReplicas: 2
   metrics:
     - type: Resource
       resource:

@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  namespace: 1-2-3-1
-  name: api-tester-files
+  namespace: anotherclass-1231
+  name: api-tester-1231-files
   labels:
-    app.kubernetes.io/part-of: anotherclass-simple-app
+    app.kubernetes.io/part-of: k8s-anotherclass
     app.kubernetes.io/component: backend-server
     app.kubernetes.io/name: api-tester
-    app.kubernetes.io/instance: "1-2-3-1"
-    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/instance: api-tester-1231
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: kubectl
 spec:
   resources:
     requests:
@@ -17,8 +18,7 @@ spec:
     - ReadWriteOnce
   selector:
     matchLabels:
-      app.kubernetes.io/part-of: anotherclass-simple-app
+      app.kubernetes.io/part-of: k8s-anotherclass
       app.kubernetes.io/component: backend-server
       app.kubernetes.io/name: api-tester
-      app.kubernetes.io/instance: "1-2-3-1"
-      app.kubernetes.io/version: "1.0.0"
+      app.kubernetes.io/instance: api-tester-1231
