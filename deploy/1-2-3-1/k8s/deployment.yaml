@@ -17,7 +17,7 @@ spec:
       app.kubernetes.io/component: backend-server
       app.kubernetes.io/name: api-tester
       app.kubernetes.io/instance: api-tester-1231
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
   template:
