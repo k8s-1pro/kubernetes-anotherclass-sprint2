@@ -7,7 +7,7 @@ server:
 
 application:
   role: "all"
-  version: "Api Tester v2.0.0"
+  version: "Api Tester v1.0.0"
 
 filepath:
   postgresql:
