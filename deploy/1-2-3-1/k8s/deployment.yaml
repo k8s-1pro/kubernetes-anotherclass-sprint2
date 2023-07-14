@@ -58,8 +58,8 @@ spec:
             httpGet:
               path: "/liveness"
               port: http
-          periodSeconds: 10
-          failureThreshold: 2
+            periodSeconds: 10
+            failureThreshold: 2
       resources:
         requests:
           memory: "100Mi"
