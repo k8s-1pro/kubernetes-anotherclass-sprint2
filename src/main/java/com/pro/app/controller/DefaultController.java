@@ -89,7 +89,7 @@ public class DefaultController {
         log.info("[SyStem] Server Traffic-On");
         return ResponseEntity.ok("ok");
     }
-    @GetMapping("/server-load-off")
+    @GetMapping("/server-traffic-off")
     @ResponseBody
     public ResponseEntity<Object> serverTrafficOff() {
         defaultService.isAppReady = false;
@@ -113,15 +113,21 @@ public class DefaultController {
         defaultService.cpuLoad(min, thread);
     }
 
-
-
-    @GetMapping("/application-role")
-    public ResponseEntity<Object> applicationRole(){
-        String returnString = "[Application Role] : " + applicationRole + "<br> (option: ALL, GET, POST, PUT, DELETE)";
+    @GetMapping("/info")
+    public ResponseEntity<Object> applicationInfo(){
+        String returnString = "<b>[Version] :</b> " + applicationVersion ;
+               returnString += "<br><b>[Profile] :</b> " + applicationProfile;
+               returnString += "<br><b>[Role] :</b> " + applicationRole + " (option: ALL, GET, POST, PUT, DELETE)" ;
+               returnString += "<br><b>[Database]</b>"
+                             + "<br>driver-class-name : " + datasourceProperties.getDriverClassName()
+                             + "<br>url : "  + datasourceProperties.getUrl()
+                             + "<br>username : "  + datasourceProperties.getUsername()
+                             + "<br>password : "  + datasourceProperties.getPassword();
         return ResponseEntity.ok(returnString);
     }
-    @GetMapping("/profile")
-    public ResponseEntity<Object> applicationProfile(){
+
+    @GetMapping("/properties")
+    public ResponseEntity<Object> properties(){
         String returnString = "[Application profile] : " + applicationProfile
                 + "<br><br><b>application.yaml :</b> Common properties"
                 + "<br>---"
@@ -154,22 +160,7 @@ public class DefaultController {
                 + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/prod/tmp/\"";
         return ResponseEntity.ok(returnString);
     }
-    @GetMapping("/version")
-    public ResponseEntity<Object> applicationVersion(){
-        String returnString = "[Application Version] : " + applicationVersion ;
-        return ResponseEntity.ok(returnString);
-    }
 
-    @GetMapping(value="/database-info")
-    @ResponseBody
-    public ResponseEntity<Object> databaseInfo() {
-        String returnString = "[Database Properties]"
-                            + "<br>driver-class-name : " + datasourceProperties.getDriverClassName()
-                            + "<br>url : "  + datasourceProperties.getUrl()
-                            + "<br>username : "  + datasourceProperties.getUsername()
-                            + "<br>password : "  + datasourceProperties.getPassword();
-        return ResponseEntity.ok(returnString);
-    }
 
     @GetMapping(value="/create-file-pv")
     @ResponseBody
