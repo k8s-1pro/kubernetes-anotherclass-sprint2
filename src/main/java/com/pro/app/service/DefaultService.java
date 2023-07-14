@@ -17,13 +17,13 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @Service
 public class DefaultService {
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
     @Autowired
     private DatasourceProperties datasourceProperties;
+    public Boolean isAppLive = false;
 
 
     public String hostname(){
@@ -39,25 +39,10 @@ public class DefaultService {
     }
 
 
-    @PostConstruct
-    public void startupTime() {
+    public Boolean probeCheck(String type){
 
-        // App 기동시간 (5초에서 10초가 걸리도록)
-        Random random = new Random();
-        int min = 1000*5;
-        int max = 1000*10;
-
-        int randomCnt = random.nextInt(max - min + 1) + min;
-
-        log.info("App is starting");
-        try {
-            Thread.sleep(randomCnt);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("App is started : {} Sec", randomCnt / 1000);
-
-
+        log.info("[Kubernetes] {}Probe -> [System] isAppLive: {}", type, isAppLive);
+        return isAppLive;
     }
 
     static List<ObjectForLeak> leak = new ArrayList<>();

@@ -2,8 +2,11 @@ package com.pro.app.controller;
 
 import com.pro.app.domain.DatasourceProperties;
 import com.pro.app.service.DefaultService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DefaultController {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     @Autowired
     private DatasourceProperties datasourceProperties;
@@ -32,17 +37,52 @@ public class DefaultController {
     @Value(value = "${spring.profiles.active}")
     private String applicationProfile;
 
-
     @GetMapping("/hello")
     public String hello(){
         return "Hello! I'm 1pro!";
     }
 
     @GetMapping("/ready")
+    public String ready(){
+        return "ok";
+    }
+
+    @GetMapping("/startup")
     @ResponseBody
-    public ResponseEntity<Object> ready() {
+    public ResponseEntity<Object> startup() {
+        if(defaultService.probeCheck("startup")){
+            return ResponseEntity.ok("ok");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @GetMapping("/readiness")
+    @ResponseBody
+    public ResponseEntity<Object> readiness() {
+        if(defaultService.probeCheck("readiness")){
+            return ResponseEntity.ok("ok");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @GetMapping("/liveness")
+    @ResponseBody
+    public ResponseEntity<Object> liveness() {
+        if(defaultService.probeCheck("liveness")){
+            return ResponseEntity.ok("ok");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/server-error")
+    @ResponseBody
+    public ResponseEntity<Object> serverError() {
+        defaultService.isAppLive = false;
+        log.info("[SyStem] An error occurred on the server");
         return ResponseEntity.ok("ok");
     }
+
 
     @GetMapping("/hostname")
     public String hostname(){
