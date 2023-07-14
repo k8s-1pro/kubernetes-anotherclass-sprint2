@@ -11,15 +11,15 @@ metadata:
     app.kubernetes.io/version: 1.0.0
     app.kubernetes.io/managed-by: kubectl
 spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/part-of: k8s-anotherclass
       app.kubernetes.io/component: backend-server
       app.kubernetes.io/name: api-tester
       app.kubernetes.io/instance: api-tester-1231
-  replicas: 1
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -43,33 +43,39 @@ spec:
                 name: api-tester-1231-properties
           startupProbe:
             httpGet:
-              path: "/ready"
+              path: "/startup"
               port: http
-            failureThreshold: 20
-          livenessProbe:
-            httpGet:
-              path: "/ready"
-              port: http
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 24
           readinessProbe:
             httpGet:
-              path: "/ready"
+              path: "/readiness"
               port: http
-          resources:
-            requests:
-              memory: "100Mi"
-              cpu: "100m"
-            limits:
-              memory: "200Mi"
-              cpu: "200m"
-          volumeMounts:
-            - name: files
-              mountPath: /usr/src/myapp/dev/files
-            - name: secret-datasource
-              mountPath: /usr/src/myapp/datasource
+            periodSeconds: 10
+            successThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: "/liveness"
+              port: http
+          periodSeconds: 10
+          failureThreshold: 2
+      resources:
+        requests:
+          memory: "100Mi"
+          cpu: "100m"
+        limits:
+          memory: "200Mi"
+          cpu: "200m"
+      volumeMounts:
+        - name: files
+          mountPath: /usr/src/myapp/dev/files
+        - name: secret-datasource
+          mountPath: /usr/src/myapp/datasource
       volumes:
         - name: files
           persistentVolumeClaim:
             claimName: api-tester-1231-files
         - name: secret-datasource
           secret:
-              secretName: api-tester-1231-postgresql
+            secretName: api-tester-1231-postgresql
