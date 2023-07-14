@@ -24,6 +24,7 @@ public class DefaultService {
     @Autowired
     private DatasourceProperties datasourceProperties;
     public Boolean isAppLive = false;
+    public Boolean isAppReady = false;
 
 
     public String hostname(){
@@ -41,8 +42,14 @@ public class DefaultService {
 
     public Boolean probeCheck(String type){
 
-        log.info("[Kubernetes] {}Probe -> [System] isAppLive: {}", type, isAppLive);
-        return isAppLive;
+
+        log.info("[Kubernetes] {}Probe -> [System] isAppLive: {}, isAppReady: {}", type, isAppLive, isAppReady);
+
+        if(type.equals("startup") || type.equals("liveness")) {
+            return isAppLive;
+        } else {  // "liveness"
+            return isAppReady;
+        }
     }
 
     static List<ObjectForLeak> leak = new ArrayList<>();

@@ -82,6 +82,13 @@ public class DefaultController {
         log.info("[SyStem] An error occurred on the server");
         return ResponseEntity.ok("ok");
     }
+    @GetMapping("/server-load")
+    @ResponseBody
+    public ResponseEntity<Object> serverLoad() {
+        defaultService.isAppReady = false;
+        log.info("[SyStem] There is a load on the system");
+        return ResponseEntity.ok("ok");
+    }
 
 
     @GetMapping("/hostname")

@@ -30,6 +30,7 @@ public class Startup implements
             log.info("[System] App is started");
 
             defaultService.isAppLive = true;
+            defaultService.isAppReady = true;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
