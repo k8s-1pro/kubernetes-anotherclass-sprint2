@@ -19,15 +19,15 @@ public class Startup implements
 
     @Override public void onApplicationEvent(ContextRefreshedEvent event) {
         try {
-            log.info("[SyStem] App is initializing");
+            log.info("[System] App is initializing");
             Thread.sleep(5*1000);
-            log.info("[SyStem] Database is connecting");
+            log.info("[System] Database is connecting");
             Thread.sleep(5*1000);
-            log.info("[SyStem] Database is connected");
+            log.info("[System] Database is connected");
             Thread.sleep(5*1000);
-            log.info("[SyStem] App is starting");
+            log.info("[System] App is starting");
             Thread.sleep(5*1000);
-            log.info("[SyStem] App is started");
+            log.info("[System] App is started");
 
             defaultService.isAppLive = true;
         } catch (InterruptedException e) {
