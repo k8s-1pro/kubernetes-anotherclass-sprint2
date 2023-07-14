@@ -60,18 +60,18 @@ spec:
               port: http
             periodSeconds: 10
             failureThreshold: 2
-      resources:
-        requests:
-          memory: "100Mi"
-          cpu: "100m"
-        limits:
-          memory: "200Mi"
-          cpu: "200m"
-      volumeMounts:
-        - name: files
-          mountPath: /usr/src/myapp/dev/files
-        - name: secret-datasource
-          mountPath: /usr/src/myapp/datasource
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+              cpu: "200m"
+          volumeMounts:
+            - name: files
+              mountPath: /usr/src/myapp/dev/files
+            - name: secret-datasource
+              mountPath: /usr/src/myapp/datasource
       volumes:
         - name: files
           persistentVolumeClaim:
