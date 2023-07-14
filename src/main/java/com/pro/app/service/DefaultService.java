@@ -43,10 +43,10 @@ public class DefaultService {
     public Boolean probeCheck(String type){
 
         if(type.equals("startup") || type.equals("liveness")) {
-            log.info("[Kubernetes] {}Probe is {}-> [System] isAppLive: {}", type, isAppLive?"is Succeed":"is Failed", isAppLive);
+            log.info("[Kubernetes] {}Probe is {}-> [System] isAppLive: {}", type, isAppLive?"Succeed":"Failed", isAppLive);
             return isAppLive;
         } else  {
-            log.info("[Kubernetes] {}Probe is {}-> [System] isAppReady: {}", type, isAppReady?"is Succeed":"is Failed", isAppReady);
+            log.info("[Kubernetes] {}Probe is {}-> [System] isAppReady: {}", type, isAppReady?"Succeed":"Failed", isAppReady);
             return isAppReady;
         }
     }
