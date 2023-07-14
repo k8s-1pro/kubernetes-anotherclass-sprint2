@@ -82,11 +82,18 @@ public class DefaultController {
         log.info("[SyStem] An error occurred on the server");
         return ResponseEntity.ok("ok");
     }
-    @GetMapping("/server-load")
+    @GetMapping("/server-load-on")
     @ResponseBody
-    public ResponseEntity<Object> serverLoad() {
+    public ResponseEntity<Object> serverLoadOn() {
         defaultService.isAppReady = false;
-        log.info("[SyStem] There is a load on the system");
+        log.info("[SyStem] Server Load-On");
+        return ResponseEntity.ok("ok");
+    }
+    @GetMapping("/server-load-off")
+    @ResponseBody
+    public ResponseEntity<Object> serverLoadOff() {
+        defaultService.isAppReady = true;
+        log.info("[SyStem] Server Load-Off");
         return ResponseEntity.ok("ok");
     }
 
