@@ -46,14 +46,13 @@ spec:
               path: "/startup"
               port: http
             periodSeconds: 5
-            successThreshold: 1
             failureThreshold: 24
           readinessProbe:
             httpGet:
               path: "/readiness"
               port: http
             periodSeconds: 10
-            successThreshold: 2
+            failureThreshold: 2
           livenessProbe:
             httpGet:
               path: "/liveness"
