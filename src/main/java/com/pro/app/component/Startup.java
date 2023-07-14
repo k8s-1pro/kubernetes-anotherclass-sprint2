@@ -28,8 +28,15 @@ public class Startup implements
             log.info("[System] App is starting");
             Thread.sleep(5*1000);
             log.info("[System] App is started");
-
             defaultService.isAppLive = true;
+            Thread.sleep(5*1000);
+            log.info("[System] Big data is loading..");
+            Thread.sleep(5*1000);
+            log.info("[System] Big data is loading..");
+            Thread.sleep(5*1000);
+            log.info("[System] Big data is loading..");
+            Thread.sleep(5*1000);
+            log.info("[System] Big data is loading..");
             defaultService.isAppReady = true;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
