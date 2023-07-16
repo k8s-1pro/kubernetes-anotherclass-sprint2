@@ -15,7 +15,7 @@ spec:
     kind: Deployment
     name: api-tester-1231
   minReplicas: 2
-  maxReplicas: 3
+  maxReplicas: 4
   metrics:
     - type: Resource
       resource:
