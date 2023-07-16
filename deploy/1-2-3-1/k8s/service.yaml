@@ -16,7 +16,7 @@ spec:
     app.kubernetes.io/name: api-tester
     app.kubernetes.io/instance: api-tester-1231
   ports:
-    - port: 8080
+    - port: 80
       targetPort: 8080
       nodePort: 31231
   type: NodePort

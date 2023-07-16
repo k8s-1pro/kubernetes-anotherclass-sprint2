@@ -11,15 +11,15 @@ metadata:
     app.kubernetes.io/version: 1.0.0
     app.kubernetes.io/managed-by: kubectl
 spec:
-  replicas: 2
-  strategy:
-    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/part-of: k8s-anotherclass
       app.kubernetes.io/component: backend-server
       app.kubernetes.io/name: api-tester
       app.kubernetes.io/instance: api-tester-1231
+  replicas: 2
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -34,10 +34,6 @@ spec:
       containers:
         - name: api-tester-1231
           image: 1pro/api-tester:v1.0.0
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 8080
           envFrom:
             - configMapRef:
                 name: api-tester-1231-properties
