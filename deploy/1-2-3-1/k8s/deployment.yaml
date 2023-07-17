@@ -40,19 +40,19 @@ spec:
           startupProbe:
             httpGet:
               path: "/startup"
-              port: http
+              port: 8080
             periodSeconds: 5
             failureThreshold: 24
           readinessProbe:
             httpGet:
               path: "/readiness"
-              port: http
+              port: 8080
             periodSeconds: 10
             failureThreshold: 2
           livenessProbe:
             httpGet:
               path: "/liveness"
-              port: http
+              port: 8080
             periodSeconds: 10
             failureThreshold: 2
           resources:
