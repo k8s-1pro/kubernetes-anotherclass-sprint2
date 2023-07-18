@@ -4,11 +4,11 @@ metadata:
   namespace: anotherclass-123
   name: api-tester-1231-properties
   labels:
-    app.kubernetes.io/part-of: k8s-anotherclass
-    app.kubernetes.io/component: backend-server
-    app.kubernetes.io/name: api-tester
-    app.kubernetes.io/instance: api-tester-1231
-    app.kubernetes.io/managed-by: kubectl
+    k8s.another.class/part-of: k8s-anotherclass
+    k8s.another.class/component: backend-server
+    k8s.another.class/name: api-tester
+    k8s.another.class/instance: api-tester-1231
+    k8s.another.class/managed-by: kubectl
 data:
   spring-profiles-active: "dev"
   application-role: "ALL"
