@@ -3,5 +3,5 @@ kind: Namespace
 metadata:
   name: anotherclass-123
   labels:
-    k8s.another.class/part-of: k8s-anotherclass
-    k8s.another.class/managed-by: kubectl
+    part-of: k8s-anotherclass
+    managed-by: kubectl

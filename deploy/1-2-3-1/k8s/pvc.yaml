@@ -4,11 +4,11 @@ metadata:
   namespace: anotherclass-123
   name: api-tester-1231-files
   labels:
-    k8s.another.class/part-of: k8s-anotherclass
-    k8s.another.class/component: backend-server
-    k8s.another.class/name: api-tester
-    k8s.another.class/instance: api-tester-1231
-    k8s.another.class/managed-by: kubectl
+    part-of: k8s-anotherclass
+    component: backend-server
+    name: api-tester
+    instance: api-tester-1231
+    managed-by: kubectl
 spec:
   resources:
     requests:
@@ -17,7 +17,7 @@ spec:
     - ReadWriteOnce
   selector:
     matchLabels:
-      k8s.another.class/part-of: k8s-anotherclass
-      k8s.another.class/component: backend-server
-      k8s.another.class/name: api-tester
-      k8s.another.class/instance: api-tester-1231-files
+      part-of: k8s-anotherclass
+      component: backend-server
+      name: api-tester
+      instance: api-tester-1231-files

@@ -4,17 +4,17 @@ metadata:
   namespace: anotherclass-123
   name: api-tester-1231
   labels:
-    k8s.another.class/part-of: k8s-anotherclass
-    k8s.another.class/component: backend-server
-    k8s.another.class/name: api-tester
-    k8s.another.class/instance: api-tester-1231
-    k8s.another.class/managed-by: kubectl
+    part-of: k8s-anotherclass
+    component: backend-server
+    name: api-tester
+    instance: api-tester-1231
+    managed-by: kubectl
 spec:
   selector:
-    k8s.another.class/part-of: k8s-anotherclass
-    k8s.another.class/component: backend-server
-    k8s.another.class/name: api-tester
-    k8s.another.class/instance: api-tester-1231
+    part-of: k8s-anotherclass
+    component: backend-server
+    name: api-tester
+    instance: api-tester-1231
   ports:
     - port: 80
       targetPort: 8080
