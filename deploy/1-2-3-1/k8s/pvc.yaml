@@ -8,6 +8,7 @@ metadata:
     component: backend-server
     name: api-tester
     instance: api-tester-1231
+    version: 1.0.0
     managed-by: kubectl
 spec:
   resources:
