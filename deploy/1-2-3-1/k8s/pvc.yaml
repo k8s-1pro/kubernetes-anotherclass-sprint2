@@ -20,4 +20,4 @@ spec:
       app.kubernetes.io/part-of: k8s-anotherclass
       app.kubernetes.io/component: backend-server
       app.kubernetes.io/name: api-tester
-      app.kubernetes.io/instance: api-tester-1231
+      app.kubernetes.io/instance: api-tester-1231-files
