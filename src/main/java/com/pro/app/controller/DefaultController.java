@@ -39,7 +39,7 @@ public class DefaultController {
 
     @GetMapping("/hello")
     public String hello(){
-        return "Hello! I'm fine thank you. and you?";
+        return "Welcome to Kubernetes Another Class";
     }
 
     @GetMapping("/ready")
@@ -82,18 +82,18 @@ public class DefaultController {
         log.info("[SyStem] An error occurred on the server");
         return ResponseEntity.ok("ok");
     }
-    @GetMapping("/server-traffic-on")
+    @GetMapping("/server-load-on")
     @ResponseBody
-    public ResponseEntity<Object> serverTrafficOn() {
+    public ResponseEntity<Object> serverLoadOn() {
         defaultService.isAppReady = true;
-        log.info("[SyStem] Server Traffic-On");
+        log.info("[SyStem] The system load has occurred");
         return ResponseEntity.ok("ok");
     }
-    @GetMapping("/server-traffic-off")
+    @GetMapping("/server-load-off")
     @ResponseBody
-    public ResponseEntity<Object> serverTrafficOff() {
+    public ResponseEntity<Object> serverLoadOff() {
         defaultService.isAppReady = false;
-        log.info("[SyStem] Server Traffic-Off");
+        log.info("[SyStem] The System load has decreased");
         return ResponseEntity.ok("ok");
     }
 
