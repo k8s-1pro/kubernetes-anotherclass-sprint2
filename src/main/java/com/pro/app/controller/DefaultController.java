@@ -85,14 +85,16 @@ public class DefaultController {
     @GetMapping("/server-load-on")
     @ResponseBody
     public ResponseEntity<Object> serverLoadOn() {
-        defaultService.isAppReady = true;
+        defaultService.isAppReady = false;
+        defaultService.isAppLive = false;
         log.info("[SyStem] The system load has occurred");
         return ResponseEntity.ok("ok");
     }
     @GetMapping("/server-load-off")
     @ResponseBody
     public ResponseEntity<Object> serverLoadOff() {
-        defaultService.isAppReady = false;
+        defaultService.isAppReady = true;
+        defaultService.isAppLive = true;
         log.info("[SyStem] The System load has decreased");
         return ResponseEntity.ok("ok");
     }
