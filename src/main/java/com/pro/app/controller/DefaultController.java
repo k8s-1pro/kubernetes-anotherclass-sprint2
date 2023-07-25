@@ -37,6 +37,9 @@ public class DefaultController {
     @Value(value = "${spring.profiles.active}")
     private String applicationProfile;
 
+    public DefaultController() {
+    }
+
     @GetMapping("/hello")
     public String hello(){
         return "Welcome to Kubernetes Another Class";
