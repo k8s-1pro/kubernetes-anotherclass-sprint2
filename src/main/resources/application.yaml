@@ -7,7 +7,7 @@ server:
 
 application:
   role: "ALL"
-  version: "Api Tester v1.0.0"
+  version: "Api Tester v2.0.0"
 
 datasource:
   driver-class-name:
