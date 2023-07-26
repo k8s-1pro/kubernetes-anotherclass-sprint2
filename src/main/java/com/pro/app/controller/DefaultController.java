@@ -85,6 +85,22 @@ public class DefaultController {
         log.info("[SyStem] An error occurred on the server");
         return ResponseEntity.ok("ok");
     }
+
+    @GetMapping("/traffic-off")
+    @ResponseBody
+    public ResponseEntity<Object> trafficOff() {
+        defaultService.isAppReady = false;
+        log.info("[SyStem] Traffic is forcibly stopped");
+        return ResponseEntity.ok("ok");
+    }
+    @GetMapping("/traffic-on")
+    @ResponseBody
+    public ResponseEntity<Object> trafficOn() {
+        defaultService.isAppReady = true;
+        log.info("[SyStem] Traffic is reconnected");
+        return ResponseEntity.ok("ok");
+    }
+
     @GetMapping("/server-load-on")
     @ResponseBody
     public ResponseEntity<Object> serverLoadOn() {
