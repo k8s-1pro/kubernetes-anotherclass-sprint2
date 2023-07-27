@@ -54,7 +54,11 @@ public class DefaultController {
     @ResponseBody
     public ResponseEntity<Object> startup() {
         if(defaultService.probeCheck("startup")){
-            return ResponseEntity.ok("ok");
+            String returnString = "<b>[App Initialization]</b>";
+            returnString += "<br>DB Connected : OK";
+            returnString += "<br>Spring Initialization : OK";
+            returnString += "<br>Jar is Running : OK";
+            return ResponseEntity.ok(returnString);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -63,7 +67,11 @@ public class DefaultController {
     @ResponseBody
     public ResponseEntity<Object> readiness() {
         if(defaultService.probeCheck("readiness")){
-            return ResponseEntity.ok("ok");
+            String returnString = "<b>[User Initialization]</b>";
+            returnString += "<br>Init Data : OK";
+            returnString += "<br>Linkage System Check : OK";
+            returnString += "<br>DB Data Validation : OK";
+            return ResponseEntity.ok(returnString);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
