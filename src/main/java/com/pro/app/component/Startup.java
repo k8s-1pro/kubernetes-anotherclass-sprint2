@@ -36,7 +36,7 @@ public class Startup implements
             Thread.sleep(5*1000);
             log.info("[System] ConfigMap data is loading..");
             Thread.sleep(5*1000);
-            log.info("[System] ConfigMap data is loading..");
+            log.info("[System] Data loading is completed");
             defaultService.isAppReady = true;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
