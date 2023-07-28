@@ -28,6 +28,7 @@ public class Startup implements
             log.info("[System] App is starting");
             Thread.sleep(5*1000);
             log.info("[System] App is started");
+            Thread.sleep(2*1000);
             defaultService.isAppLive = true;
             Thread.sleep(5*1000);
             log.info("[System] ConfigMap data is loading..");
@@ -37,6 +38,7 @@ public class Startup implements
             log.info("[System] ConfigMap data is loading..");
             Thread.sleep(5*1000);
             log.info("[System] Data loading is completed");
+            Thread.sleep(2*1000);
             defaultService.isAppReady = true;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
