@@ -15,8 +15,5 @@ datasource:
   username:
   password:
 
-filepath:
+secret-path:
   postgresql:
-  persistent-volume-data:
-  pod-volume-data:
-

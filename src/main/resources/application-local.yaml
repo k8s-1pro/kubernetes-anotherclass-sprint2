@@ -5,6 +5,6 @@ datasource:
   username: "local"
   password: "local"
 
-filepath:
+volume-path:
   persistent-volume-data: "C:\\data\\local\\"
   pod-volume-data: "C:\\data\\temp\\"

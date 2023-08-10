@@ -24,11 +24,11 @@ public class DefaultController {
     @Autowired
     private DefaultService defaultService;
 
-    @Value(value = "${filepath.persistent-volume-data}")
-    private String filepathPersistentVolumeData;
+    @Value(value = "${volume-path.persistent-volume-data}")
+    private String volumePathPersistentVolumeData;
 
-    @Value(value = "${filepath.pod-volume-data}")
-    private String filepathPodVolumeData;
+    @Value(value = "${volume-path.pod-volume-data}")
+    private String volumePathPodVolumeData;
 
     @Value(value = "${application.role}")
     private String applicationRole;
@@ -165,26 +165,26 @@ public class DefaultController {
                 + "<br>&nbsp;&nbsp;url:"
                 + "<br>&nbsp;&nbsp;username:"
                 + "<br>&nbsp;&nbsp;password:"
-                + "<br>filepath:"
-                + "<br>&nbsp;&nbsp;postgresql: "
+                + "<br>volume-path:"
+
                 + "<br>&nbsp;&nbsp;persistent-volume-data:"
                 + "<br>&nbsp;&nbsp;pod-volume-data:"
                 + "<br><br>"
                 + "<br><b>application-dev.yaml :</b> Dev properties"
                 + "<br>---"
-                + "<br>filepath:"
+                + "<br>volume-path:"
                 + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/dev/files/\""
                 + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/dev/tmp/\""
                 + "<br><br>"
                 + "<br><b>application-qa.yaml :</b> QA properties"
                 + "<br>---"
-                + "<br>filepath:"
+                + "<br>volume-path:"
                 + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/qa/files/\""
                 + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/qa/tmp/\""
                 + "<br><br>"
                 + "<br><b>application-prod.yaml :</b> Prod properties"
                 + "<br>---"
-                + "<br>filepath:"
+                + "<br>volume-path:"
                 + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/prod/files/\""
                 + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/prod/tmp/\"";
         return ResponseEntity.ok(returnString);
@@ -194,28 +194,28 @@ public class DefaultController {
     @GetMapping(value="/create-file-pv")
     @ResponseBody
     public ResponseEntity<Object> createFilePv() {
-        String filenameList = defaultService.createFile(filepathPersistentVolumeData);
+        String filenameList = defaultService.createFile(volumePathPersistentVolumeData);
         return ResponseEntity.ok(filenameList);
     }
 
     @GetMapping(value="/list-file-pv")
     @ResponseBody
     public ResponseEntity<Object> listFilePv() {
-        String filenameList = defaultService.listFiles(filepathPersistentVolumeData);
+        String filenameList = defaultService.listFiles(volumePathPersistentVolumeData);
         return ResponseEntity.ok(filenameList);
     }
 
     @GetMapping(value="/create-file-pod")
     @ResponseBody
     public ResponseEntity<Object> createFilePod() {
-        String filenameList = defaultService.createFile(filepathPodVolumeData);
+        String filenameList = defaultService.createFile(volumePathPodVolumeData);
         return ResponseEntity.ok(filenameList);
     }
 
     @GetMapping(value="/list-file-pod")
     @ResponseBody
     public ResponseEntity<Object> listFilePod() {
-        String filenameList = defaultService.listFiles(filepathPodVolumeData);
+        String filenameList = defaultService.listFiles(volumePathPodVolumeData);
         return ResponseEntity.ok(filenameList);
     }
 }
