@@ -173,20 +173,20 @@ public class DefaultController {
                 + "<br><b>application-dev.yaml :</b> Dev properties"
                 + "<br>---"
                 + "<br>volume-path:"
-                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/dev/files/\""
-                + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/dev/tmp/\""
+                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/files/dev/\""
+                + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/tmp/\""
                 + "<br><br>"
                 + "<br><b>application-qa.yaml :</b> QA properties"
                 + "<br>---"
                 + "<br>volume-path:"
-                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/qa/files/\""
-                + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/qa/tmp/\""
+                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/files/qa/\""
+                + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/tmp/\""
                 + "<br><br>"
                 + "<br><b>application-prod.yaml :</b> Prod properties"
                 + "<br>---"
                 + "<br>volume-path:"
-                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/prod/files/\""
-                + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/prod/tmp/\"";
+                + "<br>&nbsp;&nbsp;persistent-volume-data: \"/usr/src/myapp/files/prod/\""
+                + "<br>&nbsp;&nbsp;pod-volume-data: \"/usr/src/myapp/tmp/\"";
         return ResponseEntity.ok(returnString);
     }
 
