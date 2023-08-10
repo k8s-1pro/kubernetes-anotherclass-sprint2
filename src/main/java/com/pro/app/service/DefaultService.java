@@ -76,15 +76,15 @@ public class DefaultService {
         log.info("{} : cpuLoad is done", this.hostname());
     }
 
-    @Value(value = "${secret-path.postgresql}")
-    private String filepathPostgresql;
+    @Value(value = "${postgresql.filepath}")
+    private String postgresqlFilepath;
 
     @PostConstruct
     public void datasourceSecretLoad() {
         Yaml y = new Yaml();
         Reader yamlFile = null;
         try {
-            yamlFile = new FileReader(filepathPostgresql);
+            yamlFile = new FileReader(postgresqlFilepath);
         } catch (FileNotFoundException e) {
 
         }

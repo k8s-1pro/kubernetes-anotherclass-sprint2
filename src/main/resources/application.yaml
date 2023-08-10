@@ -15,5 +15,5 @@ datasource:
   username:
   password:
 
-secret-path:
-  postgresql:
+postgresql:
+  filepath:
