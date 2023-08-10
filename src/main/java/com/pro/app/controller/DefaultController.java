@@ -169,7 +169,7 @@ public class DefaultController {
                 + "<br>volume-path:"
                 + "<br>&nbsp;&nbsp;persistent-volume-data:"
                 + "<br>&nbsp;&nbsp;pod-volume-data:"
-                + "<br><br>"
+                + "<br>"
                 + "<br>postgresql:"
                 + "<br>&nbsp;&nbsp;filepath:"
                 + "<br><br>"
