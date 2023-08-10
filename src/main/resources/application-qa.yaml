@@ -1,4 +1,4 @@
 
 filepath:
-  persistent-volume-data: "/usr/src/myapp/qa/files/"
-  pod-volume-data: "/usr/src/myapp/qa/tmp/"
+  persistent-volume-data: "/usr/src/myapp/files/qa"
+  pod-volume-data: "/usr/src/myapp/tmp/qa"
