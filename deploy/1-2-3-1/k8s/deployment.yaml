@@ -67,7 +67,7 @@ spec:
             - name: files
               mountPath: /usr/src/myapp/files
             - name: secret-datasource
-              mountPath: /usr/src/myapp/datasource
+              mountPath: /usr/src/myapp/datasource/dev
       volumes:
         - name: files
           persistentVolumeClaim:
