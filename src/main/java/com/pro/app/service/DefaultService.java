@@ -76,7 +76,7 @@ public class DefaultService {
         log.info("{} : cpuLoad is done", this.hostname());
     }
 
-    @Value(value = "${filepath.postgresql}")
+    @Value(value = "${secret-path.postgresql}")
     private String filepathPostgresql;
 
     @PostConstruct

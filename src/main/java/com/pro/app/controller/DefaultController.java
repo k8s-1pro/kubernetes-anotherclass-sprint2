@@ -37,6 +37,7 @@ public class DefaultController {
     @Value(value = "${spring.profiles.active}")
     private String applicationProfile;
 
+
     public DefaultController() {
     }
 
@@ -166,7 +167,6 @@ public class DefaultController {
                 + "<br>&nbsp;&nbsp;username:"
                 + "<br>&nbsp;&nbsp;password:"
                 + "<br>volume-path:"
-
                 + "<br>&nbsp;&nbsp;persistent-volume-data:"
                 + "<br>&nbsp;&nbsp;pod-volume-data:"
                 + "<br><br>"
