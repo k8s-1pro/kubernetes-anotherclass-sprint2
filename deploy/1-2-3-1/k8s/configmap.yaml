@@ -13,4 +13,4 @@ metadata:
 data:
   spring-profiles-active: "dev"
   application-role: "ALL"
-  postgresql-file-path: "/usr/src/myapp/datasource/postgresql-info.yaml"
+  postgresql-file-path: "/usr/src/myapp/datasource/dev/postgresql-info.yaml"

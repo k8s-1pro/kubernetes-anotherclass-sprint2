@@ -65,7 +65,7 @@ spec:
               cpu: "200m"
           volumeMounts:
             - name: files
-              mountPath: /usr/src/myapp/dev/files
+              mountPath: /usr/src/myapp/files
             - name: secret-datasource
               mountPath: /usr/src/myapp/datasource
       volumes:
