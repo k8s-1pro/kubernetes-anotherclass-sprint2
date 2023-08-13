@@ -158,7 +158,8 @@ public class DefaultController {
 
     @GetMapping("/properties")
     public ResponseEntity<Object> properties(){
-        String returnString = "[Application profile] : " + applicationProfile
+        String returnString = "<b>[Application profile] : </b>" + applicationProfile
+                + "<br><b>Volume path :</b>" + volumePathPersistentVolumeData
                 + "<br><br><b>application.yaml :</b> Common properties"
                 + "<br>---"
                 + "<br>datasource:"
