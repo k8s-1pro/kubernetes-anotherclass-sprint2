@@ -11,6 +11,6 @@ metadata:
     version: 1.0.0
     managed-by: kubectl
 data:
-  spring-profiles-active: "dev"
-  application-role: "ALL"
-  postgresql-filepath: "/usr/src/myapp/datasource/postgresql-info.yaml"
+  spring_profiles_active: "dev"
+  application_role: "ALL"
+  postgresql_filepath: "/usr/src/myapp/datasource/postgresql-info.yaml"
