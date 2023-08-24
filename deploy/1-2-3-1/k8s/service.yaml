@@ -18,6 +18,6 @@ spec:
     instance: api-tester-1231
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: http
       nodePort: 31231
   type: NodePort
