@@ -143,6 +143,11 @@ public class DefaultController {
         defaultService.cpuLoad(min, thread);
     }
 
+    @GetMapping("/version")
+    public ResponseEntity<Object> version(){
+        String returnString = "[App Version] : " + applicationVersion ;
+        return ResponseEntity.ok(returnString);
+    }
     @GetMapping("/info")
     public ResponseEntity<Object> applicationInfo(){
         String returnString = "<b>[Version] :</b> " + applicationVersion ;
