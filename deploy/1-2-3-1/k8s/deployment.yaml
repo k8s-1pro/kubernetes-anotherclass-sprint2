@@ -35,6 +35,9 @@ spec:
         - name: api-tester-1231
           image: 1pro/api-tester:v1.0.0
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
           envFrom:
             - configMapRef:
                 name: api-tester-1231-properties
