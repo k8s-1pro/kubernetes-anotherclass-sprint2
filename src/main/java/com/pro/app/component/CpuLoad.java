@@ -1,7 +1,10 @@
 package com.pro.app.component;
 
-public class CpuLoad extends Thread  {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class CpuLoad extends Thread  {
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
     private double load;
     private long duration;
 
@@ -23,5 +26,6 @@ public class CpuLoad extends Thread  {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        log.info("{} : cpuLoad is done", this.getName());
     }
 }
