@@ -36,6 +36,8 @@ public class DefaultController {
     private String applicationVersion;
     @Value(value = "${spring.profiles.active}")
     private String applicationProfile;
+    private Boolean ready = true;
+
 
 
     public DefaultController() {
@@ -47,8 +49,12 @@ public class DefaultController {
     }
 
     @GetMapping("/ready")
-    public String ready(){
-        return "ok";
+    public ResponseEntity<Object> ready(){
+        if (ready){
+            return ResponseEntity.ok("ok");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/startup")
@@ -136,7 +142,7 @@ public class DefaultController {
     @GetMapping("/memory-leak")
     public void memoryLeak(){
         defaultService.memoryLeak();
-        defaultService.isAppLive = false;
+        ready = false;
     }
 
     @GetMapping("/cpu-load")
