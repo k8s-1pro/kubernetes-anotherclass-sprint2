@@ -141,8 +141,8 @@ public class DefaultController {
 
     @GetMapping("/memory-leak")
     public void memoryLeak(){
-        defaultService.memoryLeak();
         ready = false;
+        defaultService.memoryLeak();
     }
 
     @GetMapping("/cpu-load")
