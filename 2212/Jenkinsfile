@@ -12,13 +12,13 @@ pipeline {
     }
     
     stages {
-        stage('Source Checkout') {
+        stage('소스파일 체크아웃') {
             steps {
                 // 소스코드를 가져올 Github 주소
                 git branch: 'main', url: 'https://github.com/k8s-1pro/kubernetes-anotherclass-api-tester.git'
             }
         }	
-        stage('Source Build') {
+        stage('소스 빌드') {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
                 sh "chmod +x ./gradlew"
@@ -26,17 +26,16 @@ pipeline {
             }
         }
 		
-        stage('Container Checkout') {
+        stage('릴리즈파일 체크아웃') {
             steps {
-			
 				checkout scmGit(branches: [[name: '*/main']], 
-								extensions: [[$class: 'SparseCheckoutPaths', 
-								              sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
-								userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+                    extensions: [[$class: 'SparseCheckoutPaths',
+                    sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+					userRemoteConfigs: [[url: "${GITHUB_URL}"]])
             }
-        }		
+        }
 		
-        stage('Container Build') {
+        stage('컨테이너 빌드') {
             steps {                
 				// jar 파일 복사
                 sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
@@ -46,14 +45,14 @@ pipeline {
             }
         }
 		
-        stage('Container Push') {
+        stage('컨테이너 업로드') {
             steps {                
 				// DockerHub로 이미지 업로드
 				echo "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
             }
         }
 		
-        stage('K8S Deploy') {
+        stage('쿠버네티스 배포') {
             steps {
 				// K8S 배포 
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/namespace.yaml"
@@ -64,6 +63,20 @@ pipeline {
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/service.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/hpa.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/deployment.yaml"
+            }
+        }
+
+        stage('배포 확인') {
+            steps {
+				// K8S 배포
+                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/namespace.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/pv.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/pvc.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/configmap.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/secret.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/service.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/hpa.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/deployment.yaml"
             }
         }
     }
