@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: anotherclass-221
+  name: api-tester-2211-properties
+  labels:
+    part-of: k8s-anotherclass
+    component: backend-server
+    name: api-tester
+    instance: api-tester-2211
+    version: 1.0.0
+    managed-by: kubectl
+data:
+  spring_profiles_active: "dev"
+  application_role: "ALL"
+  postgresql_filepath: "/usr/src/myapp/datasource/postgresql-info.yaml"
