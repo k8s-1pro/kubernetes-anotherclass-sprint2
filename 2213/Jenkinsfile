@@ -95,8 +95,10 @@ pipeline {
         }
 
         stage('Green 전환 확인') {
+            input {
+                message: 'Green으로 전환?' ok: "Yes" parameters{booleanParam(name: 'IS_SWITCHED', defaultValue: true)}
+            }
             steps {
-                input message: 'Green으로 전환?', ok: "Yes", parameters: [booleanParam(name: 'IS_SWITCHED', defaultValue: true)]
                 if (params.IS_SWITCHED) {
                     sh "kubectl patch svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\"}}}'"
                 }
@@ -104,8 +106,10 @@ pipeline {
         }
 
         stage('Blue 삭제 확인') {
+            input {
+                message: 'Blue 삭제?' ok: "Yes" parameters{booleanParam(name: 'IS_DELETED', defaultValue: true)}
+            }
             steps {
-                input message: 'Blue 삭제?', ok: "Yes", parameters: [booleanParam(name: 'IS_DELETED', defaultValue: true)]
                 if (params.IS_DELETED) {
                     sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
                     sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
