@@ -29,6 +29,12 @@ pipeline {
             }
         }
 
+        stage('배포 확인') {
+            steps {
+                input message: '수동배포 시작', ok: "Yes"
+            }
+        }
+
         stage('쿠버네티스 Green배포') {
             steps {
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
@@ -36,12 +42,6 @@ pipeline {
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
-            }
-        }
-
-        stage('배포 확인') {
-            steps {
-                input message: '수동배포 시작', ok: "Yes"
             }
         }
 
