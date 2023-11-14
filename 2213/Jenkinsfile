@@ -53,9 +53,18 @@ pipeline {
             }
         }
 
-        stage('쿠버네티스 배포') {
+        stage('쿠버네티스 Blue배포') {
             steps {
-				// K8S 배포
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/service.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
+            }
+        }
+
+        stage('쿠버네티스 Green배포') {
+            steps {
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
@@ -69,7 +78,14 @@ pipeline {
                 // 10초 대기
                 sh "sleep 10"
 
-				// K8S 배포
+				// Blue 확인
+                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/service.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
+
+				// Green 확인
                 sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
 				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
 				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
@@ -82,7 +98,7 @@ pipeline {
             steps {
                 input message: 'Green으로 전환?', ok: "Yes", parameters: [booleanParam(name: 'IS_SWITCHED', defaultValue: true)]
                 if (params.IS_SWITCHED) {
-                    sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/service-v2.yaml"
+                    sh "kubectl patch svc api-tester-2213-blue -p '{"spec": {"selector": {"version": "2.0.0"}}}'"
                 }
             }
         }

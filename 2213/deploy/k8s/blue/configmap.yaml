@@ -2,12 +2,12 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: anotherclass-221
-  name: api-tester-2212-properties
+  name: api-tester-2213-blue-properties
   labels:
     part-of: k8s-anotherclass
     component: backend-server
     name: api-tester
-    instance: api-tester-2212
+    instance: api-tester-2213-blue
     version: 1.0.0
     managed-by: kubectl
 data:
