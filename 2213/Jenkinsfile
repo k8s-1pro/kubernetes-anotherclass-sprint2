@@ -96,7 +96,11 @@ pipeline {
 
         stage('Green 전환 확인') {
             input {
-                message: 'Green으로 전환?' ok: "Yes" parameters{booleanParam(name: 'IS_SWITCHED', defaultValue: true)}
+                message: 'Green으로 전환?'
+                ok: "Yes"
+                parameters{
+                    booleanParam(name: 'IS_SWITCHED', defaultValue: true)
+                }
             }
             steps {
                 if (params.IS_SWITCHED) {
@@ -107,7 +111,11 @@ pipeline {
 
         stage('Blue 삭제 확인') {
             input {
-                message: 'Blue 삭제?' ok: "Yes" parameters{booleanParam(name: 'IS_DELETED', defaultValue: true)}
+                message: 'Blue 삭제?'
+                ok: "Yes"
+                parameters{
+                    booleanParam(name: 'IS_DELETED', defaultValue: true)
+                }
             }
             steps {
                 if (params.IS_DELETED) {
