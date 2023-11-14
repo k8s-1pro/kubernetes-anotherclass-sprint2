@@ -5,7 +5,16 @@ pipeline {
         // 실습 넘버링
         CLASS_NUM = '2213'
     }
-    
+
+    stage('릴리즈파일 체크아웃') {
+        steps {
+            checkout scmGit(branches: [[name: '*/main']],
+                    extensions: [[$class: 'SparseCheckoutPaths',
+                                  sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+                    userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+        }
+    }
+
     stages {
         stage('쿠버네티스 Blue배포') {
             steps {
