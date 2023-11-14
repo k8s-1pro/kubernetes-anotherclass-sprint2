@@ -98,7 +98,7 @@ pipeline {
             steps {
                 input message: 'Green으로 전환?', ok: "Yes", parameters: [booleanParam(name: 'IS_SWITCHED', defaultValue: true)]
                 if (params.IS_SWITCHED) {
-                    sh "kubectl patch svc api-tester-2213-blue -p '{"spec": {"selector": {"version": "2.0.0"}}}'"
+                    sh "kubectl patch svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\"}}}'"
                 }
             }
         }
