@@ -1,0 +1,102 @@
+pipeline {
+    agent any
+    
+    environment {
+        // 본인의 DockerHub Username을 넣으세요
+        DOCKERHUB_USERNAME = '1pro'
+        // 본인의 GitHub URL을 넣으세요
+        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+
+        // 실습 넘버링 - (수정x)
+        CLASS_NUM = '2213'
+    }
+    
+    stages {
+        stage('소스파일 체크아웃') {
+            steps {
+                // 소스코드를 가져올 Github 주소
+                git branch: 'main', url: 'https://github.com/k8s-1pro/kubernetes-anotherclass-api-tester.git'
+            }
+        }
+
+        stage('소스 빌드') {
+            steps {
+                // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
+                sh "chmod +x ./gradlew"
+                sh "./gradlew clean build"
+            }
+        }
+
+        stage('릴리즈파일 체크아웃') {
+            steps {
+				checkout scmGit(branches: [[name: '*/main']],
+                    extensions: [[$class: 'SparseCheckoutPaths',
+                    sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+					userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+            }
+        }
+
+        stage('컨테이너 빌드') {
+            steps {
+				// jar 파일 복사
+                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+
+				// 도커 빌드
+				sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:v1.0.0 ./${CLASS_NUM}/build/docker"
+            }
+        }
+
+        stage('컨테이너 업로드') {
+            steps {
+				// DockerHub로 이미지 업로드
+				sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
+            }
+        }
+
+        stage('쿠버네티스 배포') {
+            steps {
+				// K8S 배포
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
+				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
+            }
+        }
+
+        stage('배포 확인') {
+            steps {
+                // 10초 대기
+                sh "sleep 10"
+
+				// K8S 배포
+                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
+				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
+            }
+        }
+
+        stage('Green 전환 확인') {
+            steps {
+                input message: 'Green으로 전환?', ok: "Yes", parameters: [booleanParam(name: 'IS_SWITCHED', defaultValue: true)]
+                if (params.IS_SWITCHED) {
+                    sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/service-v2.yaml"
+                }
+            }
+        }
+
+        stage('Blue 삭제 확인') {
+            steps {
+                input message: 'Blue 삭제?', ok: "Yes", parameters: [booleanParam(name: 'IS_DELETED', defaultValue: true)]
+                if (params.IS_DELETED) {
+                    sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
+                    sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
+                    sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
+                    sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
+                }
+            }
+        }
+    }
+}
