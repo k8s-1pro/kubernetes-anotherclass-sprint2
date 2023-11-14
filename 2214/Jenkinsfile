@@ -2,20 +2,22 @@ pipeline {
     agent any
     
     environment {
+        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
         // 실습 넘버링
         CLASS_NUM = '2214'
     }
 
-    stage('릴리즈파일 체크아웃') {
-        steps {
-            checkout scmGit(branches: [[name: '*/main']],
-                    extensions: [[$class: 'SparseCheckoutPaths',
-                                  sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
-                    userRemoteConfigs: [[url: "${GITHUB_URL}"]])
-        }
-    }
-    
     stages {
+
+        stage('릴리즈파일 체크아웃') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']],
+                        extensions: [[$class: 'SparseCheckoutPaths',
+                                      sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+                        userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+            }
+        }
+
         stage('쿠버네티스 Blue배포') {
             steps {
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
