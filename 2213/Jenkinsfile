@@ -52,6 +52,7 @@ pipeline {
                 script {
                     if (${IS_SWITCHED}) {
                         sh "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2213-green\"}}}'"
+                        echo "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2213-green\"}}}'"
                     }
                 }
             }
