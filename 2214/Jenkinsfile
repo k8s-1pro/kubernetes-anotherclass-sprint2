@@ -20,7 +20,6 @@ pipeline {
 
         stage('쿠버네티스 Blue배포') {
             steps {
-                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/service.yaml"
@@ -49,7 +48,7 @@ pipeline {
                 script {
                     def IS_RESULT
                     while (IS_RESULT != "true true"){
-                        IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-212 pods --selector=version='1.0.0' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
+                        IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods --selector=version='2.0.0' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
                         echo "${IS_RESULT}"
                     }
                 }
