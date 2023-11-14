@@ -2,7 +2,9 @@ pipeline {
     agent any
     
     environment {
+        // 본인의 username으로 하실 분은 수정해주세요.
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+
         // 실습 넘버링
         CLASS_NUM = '2214'
     }
@@ -50,6 +52,7 @@ pipeline {
                     while (IS_RESULT != "true true"){
                         IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods --selector=version='2.0.0' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
                         echo "${IS_RESULT}"
+                        sleep 2
                     }
                 }
             }
@@ -63,9 +66,6 @@ pipeline {
 
         stage('Blue 삭제') {
             steps {
-                input message: 'Green 전환?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_SWITCHED')]
-
-                sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"

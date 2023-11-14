@@ -2,6 +2,7 @@ pipeline {
     agent any
     
     environment {
+        // 본인의 username으로 하실 분은 수정해주세요.
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
         // 실습 넘버링
@@ -40,22 +41,7 @@ pipeline {
 
         stage('배포 확인') {
             steps {
-                // 10초 대기
-                sh "sleep 10"
-
-				// Blue 확인
-                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/service.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
-
-				// Green 확인
-                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
+                input message: '수동배포 시작', ok: "Yes"
             }
         }
 

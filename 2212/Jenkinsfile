@@ -2,12 +2,11 @@ pipeline {
     agent any
     
     environment {
-        // 본인의 DockerHub Username을 넣으세요
+        // 본인의 username으로 하실 분은 수정해주세요.
         DOCKERHUB_USERNAME = '1pro'
-        // 본인의 GitHub URL을 넣으세요
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
-        // 실습 넘버링 - (수정x)
+        // 실습 넘버링
         CLASS_NUM = '2212'
     }
     
@@ -48,8 +47,9 @@ pipeline {
 
         stage('컨테이너 업로드') {
             steps {
-				// DockerHub로 이미지 업로드
-				sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
+				// DockerHub로 이미지 업로드 - 본인의 DockerHub로 하시는 분은 주석 해제 해주세요.
+				//sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
+                echo "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
             }
         }
 
