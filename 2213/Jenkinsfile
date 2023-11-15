@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Blue 배포') {
+        stage('쿠버네티스 Blue배포') {
             steps {
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
@@ -35,7 +35,7 @@ pipeline {
             }
         }
 
-        stage('Green 배포') {
+        stage('쿠버네티스 Green배포') {
             steps {
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
@@ -45,18 +45,18 @@ pipeline {
             }
         }
 
-        stage('Green 전환여부 확인') {
+        stage('전환여부 확인') {
             steps {
                 script {
                     IS_SWITCHED = input message: 'Green 전환?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_SWITCHED')]
-                    if (${IS_SWITCHED}) {
+                    if (IS_SWITCHED) {
                         sh "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2213-green\"}}}'"
                     }
                 }
             }
         }
 
-        stage('Blue롤백 확인') {
+        stage('롤백 확인') {
             steps {
                 script {
                     IS_ROLLBACk = input message: 'Blue 롤백?', parameters: [choice(choices: ['done', 'rollback'], name: 'IS_ROLLBACk')]
