@@ -47,9 +47,14 @@ pipeline {
 
         stage('컨테이너 업로드') {
             steps {
-				// DockerHub로 이미지 업로드 - 본인의 DockerHub로 하시는 분은 주석 해제 해주세요.
-				//sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
-                echo "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
+				// DockerHub로 이미지 업로드
+                script{
+                    if (DOCKERHUB_USERNAME == "1pro") {
+                        echo "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
+                    } else {
+                        sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
+                    }
+                }
             }
         }
 
