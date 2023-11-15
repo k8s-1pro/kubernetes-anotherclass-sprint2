@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('쿠버네티스 Blue배포') {
+        stage('Blue 배포') {
             steps {
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
@@ -29,13 +29,13 @@ pipeline {
             }
         }
 
-        stage('배포 확인') {
+        stage('배포 시작') {
             steps {
                 input message: '수동배포 시작', ok: "Yes"
             }
         }
 
-        stage('쿠버네티스 Green배포') {
+        stage('Green 배포') {
             steps {
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
@@ -45,29 +45,29 @@ pipeline {
             }
         }
 
-        stage('Green 전환 확인') {
+        stage('Green 전환여부 확인') {
             steps {
-                input message: 'Green 전환?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_SWITCHED')]
-
                 script {
+                    IS_SWITCHED = input message: 'Green 전환?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_SWITCHED')]
                     if (${IS_SWITCHED}) {
                         sh "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2213-green\"}}}'"
-                        echo "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2213-green\"}}}'"
                     }
                 }
             }
         }
 
-        stage('Blue 삭제 확인') {
+        stage('Blue롤백 확인') {
             steps {
-                input message: 'Blue 삭제?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_DELETED')]
-
                 script {
-                    if (${IS_DELETED}) {
+                    IS_ROLLBACk = input message: 'Blue 롤백?', parameters: [choice(choices: ['done', 'rollback'], name: 'IS_ROLLBACk')]
+                    if (IS_ROLLBACk == "done") {
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
+                    }
+                    if (IS_ROLLBACk == "rollback") {
+                        sh "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"1.0.0\", \"instance\": \"api-tester-2213-blue\"}}}'"
                     }
                 }
             }
