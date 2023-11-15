@@ -45,12 +45,12 @@ pipeline {
             }
         }
 
-        stage('Green배포 확인') {
+        stage('Green 배포 확인중') {
             steps {
                 script {
                     def IS_RESULT
                     while (IS_RESULT != "true true"){
-                        IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods --selector=version='2.0.0' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
+                        IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods -l instance='api-tester-2214-green' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
                         echo "${IS_RESULT}"
                         sleep 5
                     }
@@ -58,7 +58,7 @@ pipeline {
             }
         }
 
-        stage('Green 전환 확인') {
+        stage('Green 전환 완료') {
             steps {
                 sh "kubectl patch -n anotherclass-221 svc api-tester-2214-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2214-green\"}}}'"
             }
