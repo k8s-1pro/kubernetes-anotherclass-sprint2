@@ -41,7 +41,8 @@ pipeline {
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
+                sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
             }
         }
 
