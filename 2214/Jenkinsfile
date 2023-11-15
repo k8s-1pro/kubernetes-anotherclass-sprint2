@@ -45,14 +45,14 @@ pipeline {
             }
         }
 
-        stage('배포 확인') {
+        stage('Green배포 확인') {
             steps {
                 script {
                     def IS_RESULT
                     while (IS_RESULT != "true true"){
                         IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods --selector=version='2.0.0' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
                         echo "${IS_RESULT}"
-                        sleep 2
+                        sleep 5
                     }
                 }
             }
