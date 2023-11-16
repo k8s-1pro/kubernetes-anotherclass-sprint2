@@ -25,7 +25,7 @@ spec:
         component: backend-server
         name: api-tester
         version: 1.0.0
-        blue-green-no: 1
+        blue-green-no: "1"
     spec:
       nodeSelector:
         kubernetes.io/hostname: k8s-master

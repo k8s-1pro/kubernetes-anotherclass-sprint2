@@ -14,7 +14,7 @@ spec:
     part-of: k8s-anotherclass
     component: backend-server
     name: api-tester
-    blue-green-no: 2
+    blue-green-no: "2"
   ports:
     - port: 80
       targetPort: http
