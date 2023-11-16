@@ -60,9 +60,9 @@ pipeline {
                     if (IS_ROLLBACk == "done") {
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
-                        sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"spec\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
-                        sh "kubectl patch -n anotherclass-221 cm api-tester-properties -p '{\"spec\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
-                        sh "kubectl patch -n anotherclass-221 secret api-tester-postgresql -p '{\"spec\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                        sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                        sh "kubectl patch -n anotherclass-221 cm api-tester-properties -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                        sh "kubectl patch -n anotherclass-221 secret api-tester-postgresql -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
                     }
                     if (IS_ROLLBACk == "rollback") {
                         sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"spec\": {\"selector\": {\"blue-green-no\": \"1\"}}}'"

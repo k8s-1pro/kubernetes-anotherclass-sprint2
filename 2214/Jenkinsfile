@@ -22,6 +22,7 @@ pipeline {
 
         stage('쿠버네티스 Blue배포') {
             steps {
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/service.yaml"
@@ -48,7 +49,7 @@ pipeline {
                 script {
                     def IS_RESULT
                     while (IS_RESULT != "true true"){
-                        IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods -l instance='api-tester-2214-green' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
+                        IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods -l instance='api-tester-2214' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
                         echo "${IS_RESULT}"
                         sleep 5
                     }
@@ -58,7 +59,7 @@ pipeline {
 
         stage('Green 전환 완료') {
             steps {
-                sh "kubectl patch -n anotherclass-221 svc api-tester-2214-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2214-green\"}}}'"
+                sh "kubectl patch -n anotherclass-221 svc api-tester-2214 -p '{\"spec\": {\"selector\": {\"blue-green-no\": \"2\"}}}'"
             }
         }
 
@@ -66,6 +67,9 @@ pipeline {
             steps {
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
+                sh "kubectl patch -n anotherclass-221 svc api-tester-2214 -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                sh "kubectl patch -n anotherclass-221 cm api-tester-2214-properties -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                sh "kubectl patch -n anotherclass-221 secret api-tester-2214-postgresql -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
             }
         }
     }

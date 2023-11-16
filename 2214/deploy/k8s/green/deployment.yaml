@@ -2,12 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: anotherclass-221
-  name: api-tester-2214-green
+  name: api-tester-2214-2
   labels:
     part-of: k8s-anotherclass
     component: backend-server
     name: api-tester
-    instance: api-tester-2214-green
+    instance: api-tester-2214
     version: 2.0.0
     managed-by: kubectl
 spec:
@@ -16,7 +16,7 @@ spec:
       part-of: k8s-anotherclass
       component: backend-server
       name: api-tester
-      instance: api-tester-2214-green
+      instance: api-tester-2214
   replicas: 2
   strategy:
     type: RollingUpdate
@@ -26,13 +26,14 @@ spec:
         part-of: k8s-anotherclass
         component: backend-server
         name: api-tester
-        instance: api-tester-2214-green
+        instance: api-tester-2214
         version: 2.0.0
+        blue-green-no: "2"
     spec:
       nodeSelector:
         kubernetes.io/hostname: k8s-master
       containers:
-        - name: api-tester-2214-green
+        - name: api-tester-2214-2
           image: 1pro/api-tester:v2.0.0
           imagePullPolicy: Always
           ports:
@@ -40,7 +41,7 @@ spec:
               name: http
           envFrom:
             - configMapRef:
-                name: api-tester-2214-green-properties
+                name: api-tester-2214-properties
           startupProbe:
             httpGet:
               path: "/startup"
@@ -72,4 +73,4 @@ spec:
       volumes:
         - name: secret-datasource
           secret:
-            secretName: api-tester-2214-green-postgresql
+            secretName: api-tester-2214-postgresql
