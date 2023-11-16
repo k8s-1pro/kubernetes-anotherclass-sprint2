@@ -37,9 +37,6 @@ pipeline {
 
         stage('쿠버네티스 Green배포') {
             steps {
-                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
@@ -67,8 +64,6 @@ pipeline {
 
         stage('Blue 삭제') {
             steps {
-                sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
-                sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
                 sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
             }

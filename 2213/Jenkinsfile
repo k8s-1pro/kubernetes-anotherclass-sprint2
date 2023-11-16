@@ -37,11 +37,8 @@ pipeline {
 
         stage('쿠버네티스 Green배포') {
             steps {
-                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/namespace.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/configmap.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/secret.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
 				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
             }
         }
 
@@ -50,7 +47,7 @@ pipeline {
                 script {
                     IS_SWITCHED = input message: 'Green 전환?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_SWITCHED')]
                     if (IS_SWITCHED) {
-                        sh "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"2.0.0\", \"instance\": \"api-tester-2213-green\"}}}'"
+                        sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"spec\": {\"selector\": {\"blue-green-no\": \"2\"}}}'"
                     }
                 }
             }
@@ -61,13 +58,14 @@ pipeline {
                 script {
                     IS_ROLLBACk = input message: 'Blue 롤백?', parameters: [choice(choices: ['done', 'rollback'], name: 'IS_ROLLBACk')]
                     if (IS_ROLLBACk == "done") {
-                        sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
-                        sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
+                        sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"spec\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                        sh "kubectl patch -n anotherclass-221 cm api-tester-properties -p '{\"spec\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                        sh "kubectl patch -n anotherclass-221 secret api-tester-postgresql -p '{\"spec\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
                     }
                     if (IS_ROLLBACk == "rollback") {
-                        sh "kubectl patch -n anotherclass-221 svc api-tester-2213-blue -p '{\"spec\": {\"selector\": {\"version\": \"1.0.0\", \"instance\": \"api-tester-2213-blue\"}}}'"
+                        sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"spec\": {\"selector\": {\"blue-green-no\": \"1\"}}}'"
                     }
                 }
             }
