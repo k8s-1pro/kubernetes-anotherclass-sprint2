@@ -7,6 +7,7 @@ metadata:
     part-of: k8s-anotherclass
     component: backend-server
     name: api-tester
+    instance: api-tester
     version: 1.0.0
     managed-by: kubectl
 data:
