@@ -37,17 +37,17 @@ pipeline {
 
         stage('컨테이너 빌드') {
             steps {
-				// jar 파일 복사
+                // jar 파일 복사
                 sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
-				// 도커 빌드
+                // 도커 빌드
                 sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:v1.0.0 ./${CLASS_NUM}/build/docker"
             }
         }
 
         stage('컨테이너 업로드') {
             steps {
-				// DockerHub로 이미지 업로드
+                // DockerHub로 이미지 업로드
                 script{
                     if (DOCKERHUB_USERNAME == "1pro") {
                         echo "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
@@ -60,7 +60,7 @@ pipeline {
 
         stage('쿠버네티스 배포') {
             steps {
-				// K8S 배포
+                // K8S 배포
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/namespace.yaml"
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/configmap.yaml"
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/secret.yaml"
@@ -74,7 +74,7 @@ pipeline {
                 // 10초 대기
                 sh "sleep 10"
 
-				// K8S 배포
+                // K8S 배포
                 sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/namespace.yaml"
                 sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/configmap.yaml"
                 sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/secret.yaml"
