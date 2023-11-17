@@ -28,7 +28,7 @@ pipeline {
 
         stage('릴리즈파일 체크아웃') {
             steps {
-				checkout scmGit(branches: [[name: '*/main']],
+                checkout scmGit(branches: [[name: '*/main']],
                     extensions: [[$class: 'SparseCheckoutPaths',
                     sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
 					userRemoteConfigs: [[url: "${GITHUB_URL}"]])
@@ -41,7 +41,7 @@ pipeline {
                 sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
 				// 도커 빌드
-				sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:v1.0.0 ./${CLASS_NUM}/build/docker"
+                sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:v1.0.0 ./${CLASS_NUM}/build/docker"
             }
         }
 
@@ -62,10 +62,10 @@ pipeline {
             steps {
 				// K8S 배포
                 sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/namespace.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/configmap.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/secret.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/service.yaml"
-				sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/deployment.yaml"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/configmap.yaml"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/secret.yaml"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/service.yaml"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/deployment.yaml"
             }
         }
 
@@ -76,10 +76,10 @@ pipeline {
 
 				// K8S 배포
                 sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/namespace.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/configmap.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/secret.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/service.yaml"
-				sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/deployment.yaml"
+                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/configmap.yaml"
+                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/secret.yaml"
+                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/service.yaml"
+                sh "kubectl get -f ./${CLASS_NUM}/deploy/k8s/deployment.yaml"
             }
         }
     }
