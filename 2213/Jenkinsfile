@@ -45,8 +45,8 @@ pipeline {
         stage('전환여부 확인') {
             steps {
                 script {
-                    IS_SWITCHED = input message: 'Green 전환?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_SWITCHED')]
-                    if (IS_SWITCHED) {
+                    returnValue = input message: 'Green 전환?', ok: "Yes", parameters: [booleanParam(defaultValue: true, name: 'IS_SWITCHED')]
+                    if (returnValue) {
                         sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"spec\": {\"selector\": {\"blue-green-no\": \"2\"}}}'"
                     }
                 }
@@ -56,15 +56,15 @@ pipeline {
         stage('롤백 확인') {
             steps {
                 script {
-                    IS_ROLLBACk = input message: 'Blue 롤백?', parameters: [choice(choices: ['done', 'rollback'], name: 'IS_ROLLBACk')]
-                    if (IS_ROLLBACk == "done") {
+                    returnValue = input message: 'Blue 롤백?', parameters: [choice(choices: ['done', 'rollback'], name: 'IS_ROLLBACk')]
+                    if (returnValue == "done") {
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
                         sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/green/service.yaml"
                         sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
                         sh "kubectl patch -n anotherclass-221 cm api-tester-properties -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
                         sh "kubectl patch -n anotherclass-221 secret api-tester-postgresql -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
                     }
-                    if (IS_ROLLBACk == "rollback") {
+                    if (returnValue == "rollback") {
                         sh "kubectl patch -n anotherclass-221 svc api-tester -p '{\"spec\": {\"selector\": {\"blue-green-no\": \"1\"}}}'"
                     }
                 }
