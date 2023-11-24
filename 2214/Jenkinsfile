@@ -45,10 +45,10 @@ pipeline {
         stage('Green 배포 확인중') {
             steps {
                 script {
-                    def IS_RESULT
-                    while (IS_RESULT != "true true"){
-                        IS_RESULT = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods -l instance='api-tester-2214',blue-green-no='2' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
-                        echo "${IS_RESULT}"
+                    def returnValue
+                    while (returnValue != "true true"){
+                        returnValue = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods -l instance='api-tester-2214',blue-green-no='2' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
+                        echo "${returnValue}"
                         sleep 5
                     }
                 }
