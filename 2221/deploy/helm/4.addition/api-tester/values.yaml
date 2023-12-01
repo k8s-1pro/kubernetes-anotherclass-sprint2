@@ -29,13 +29,13 @@ resources:
     memory: 100Mi
 
 envFrom:
-  configMapRef: api-tester-2214-properties
+  configMapRef: api-tester-2221-properties
 
 # Additional volumes on the output Deployment definition.
 volumes:
   - name: secret-datasource
     secret:
-      secretName: api-tester-2214-postgresql
+      secretName: api-tester-2221-postgresql
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
