@@ -28,6 +28,13 @@ resources:
     cpu: 100m
     memory: 100Mi
 
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
 envFrom:
   configMapRef: api-tester-2221-properties
 
