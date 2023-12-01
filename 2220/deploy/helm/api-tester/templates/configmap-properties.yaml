@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "api-tester.fullname" . }}
+  name: {{ include "api-tester.fullname" . }}-properties
   labels:
     {{- include "api-tester.labels" . | nindent 4 }}
 data:
