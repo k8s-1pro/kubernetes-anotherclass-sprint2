@@ -55,14 +55,14 @@ pipeline {
         stage('헬름 템플릿 확인') {
             steps {
                 // K8S 배포
-                sh "helm upgrade api-tester-2221 ./${CLASS_NUM}/deploy/helm/4.addition/api-tester -n anotherclass-222 --create-namespace --install"
+                sh "helm upgrade api-tester-2222 ./${CLASS_NUM}/deploy/helm/4.addition/api-tester -n anotherclass-222 --create-namespace --install"
             }
         }
 
         stage('헬름 배포') {
             steps {
                 input message: '배포 시작', ok: "Yes"
-                sh "helm upgrade api-tester-2221 ./${CLASS_NUM}/deploy/helm/4.addition/api-tester -n anotherclass-222 --create-namespace --install"
+                sh "helm upgrade api-tester-2222 ./${CLASS_NUM}/deploy/helm/4.addition/api-tester -n anotherclass-222 --create-namespace --install"
             }
         }
     }
