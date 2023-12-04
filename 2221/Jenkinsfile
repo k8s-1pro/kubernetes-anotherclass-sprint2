@@ -7,7 +7,7 @@ pipeline {
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
         // 실습 넘버링
-        CLASS_NUM = '2222'
+        CLASS_NUM = '2221'
     }
 
     stages {
