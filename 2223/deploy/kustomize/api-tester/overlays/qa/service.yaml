@@ -4,5 +4,7 @@ metadata:
   name: api-tester-2223
 spec:
   ports:
-    - name: test
+    - name: http
       nodePort: 32233
+      port: 80
+      targetPort: http
