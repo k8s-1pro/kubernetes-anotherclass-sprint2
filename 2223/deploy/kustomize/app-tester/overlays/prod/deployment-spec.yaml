@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: api-tester-2223
 spec:
-  replicas: 2
   template:
     spec:
       containers:

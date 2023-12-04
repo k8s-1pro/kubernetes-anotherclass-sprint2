@@ -1,6 +1,4 @@
 
-replicaCount: 2
-
 image:
   repository: 1pro/api-tester
   pullPolicy: IfNotPresent
@@ -13,6 +11,11 @@ resources:
   requests:
     cpu: 150m
     memory: 150Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
 
 service:
   nodePort: 32232

@@ -8,5 +8,6 @@ patches:
   - path: configmap-properties.yaml
   - path: deployment-spec.yaml
   - path: deployment-ver.yaml
+  - path: hpa.yaml
   - path: secret-postgresql.yaml
   - path: service.yaml

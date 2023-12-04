@@ -9,7 +9,7 @@ metadata:
     name: api-tester
     instance: api-tester-2223
     version: 1.0.0
-    managed-by: kubectl
+    managed-by: kustomize
 data:
   spring_profiles_active: "dev"
   application_role: "ALL"
