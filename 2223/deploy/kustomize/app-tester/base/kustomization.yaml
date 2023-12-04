@@ -5,7 +5,6 @@ commonLabels:
   component: backend-server
   name: api-tester
   instance: api-tester-2223
-  version: 1.0.0
 resources:
   - configmap-properties.yaml
   - deployment.yaml
