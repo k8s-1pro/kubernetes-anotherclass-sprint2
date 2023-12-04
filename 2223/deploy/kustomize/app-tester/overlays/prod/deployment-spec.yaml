@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-tester-2223
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: api-tester-2223
+          resources:
+            requests:
+              memory: "150Mi"
+              cpu: "150m"
+            limits:
+              memory: "250Mi"
+              cpu: "250m"

@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  variant: prod
+resources:
+  - ../../base
+patches:
+  - path: configmap-properties.yaml
+  - path: deployment-spec.yaml
+  - path: deployment-ver.yaml
+  - path: secret-postgresql.yaml
+  - path: service.yaml

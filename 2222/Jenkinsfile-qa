@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
         DOCKERHUB_USERNAME = '1pro'
@@ -29,9 +29,9 @@ pipeline {
         stage('릴리즈파일 체크아웃') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']],
-                        extensions: [[$class: 'SparseCheckoutPaths',
-                                      sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
-                        userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+                    extensions: [[$class: 'SparseCheckoutPaths',
+                    sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+					userRemoteConfigs: [[url: "${GITHUB_URL}"]])
             }
         }
 
@@ -55,14 +55,14 @@ pipeline {
         stage('헬름 템플릿 확인') {
             steps {
                 // K8S 배포
-                sh "helm template api-tester-2222-1 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-1.yaml -n anotherclass-222"
+                sh "helm template api-tester-2222 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-qa.yaml -n anotherclass-222-qa"
             }
         }
 
         stage('헬름 배포') {
             steps {
                 input message: '배포 시작', ok: "Yes"
-                sh "helm upgrade api-tester-2222-1 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-1.yaml -n anotherclass-222 --create-namespace --install"
+                sh "helm upgrade api-tester-2222 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-qa.yaml -n anotherclass-222-qa --create-namespace --install"
             }
         }
     }

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-tester-2223-properties
+data:
+  spring_profiles_active: "qa"
+  application_role: "ALL"
+  postgresql_filepath: "/usr/src/myapp/datasource/postgresql-info.yaml"

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-tester-2223
+spec:
+  ports:
+    - name: http
+      nodePort: 32233

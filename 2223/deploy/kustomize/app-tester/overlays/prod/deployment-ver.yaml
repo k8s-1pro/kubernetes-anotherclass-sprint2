@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-tester-2223
+spec:
+  template:
+    spec:
+      containers:
+        - name: api-tester-2223
+          image: 1pro/api-tester:v1.0.0
+          imagePullPolicy: IfNotPresent

@@ -36,13 +36,13 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 envFrom:
-  configMapRef:
+  configMapRef: api-tester-2222-properties
 
 # Additional volumes on the output Deployment definition.
 volumes:
   - name: secret-datasource
     secret:
-      secretName:
+      secretName: api-tester-2222-postgresql
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
@@ -55,15 +55,7 @@ nodeSelector:
 configmap:
   data:
     properties:
-      spring_profiles_active: "dev"
-      application_role: "ALL"
-      postgresql_filepath: "/usr/src/myapp/datasource/postgresql-info.yaml"
 
 secret:
   data:
     postgresql:
-      postgresql-info.yaml: |
-        driver-class-name: "org.postgresql.Driver"
-        url: "jdbc:postgresql://postgresql:5431"
-        username: "dev"
-        password: "dev123"
