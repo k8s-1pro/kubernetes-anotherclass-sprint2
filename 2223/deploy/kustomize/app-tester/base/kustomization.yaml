@@ -8,8 +8,7 @@ commonLabels:
   version: 1.0.0
 resources:
   - configmap-properties.yaml
-  - deployment-spec.yaml
-  - deployment-ver.yaml
+  - deployment.yaml
   - hpa.yaml
   - secret-postgresql.yaml
   - service.yaml
