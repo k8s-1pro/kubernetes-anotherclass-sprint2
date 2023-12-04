@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE')
+    }
+
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
         DOCKERHUB_USERNAME = '1pro'
@@ -55,7 +59,7 @@ pipeline {
         stage('커스터마이즈 빌드') {
             steps {
                 // K8S 배포
-                sh "kubectl kustomize ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/dev"
+                sh "kubectl kustomize ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/${params.PROFILE}"
             }
         }
 
@@ -63,8 +67,8 @@ pipeline {
             steps {
                 // K8S 배포
                 input message: '배포 시작', ok: "Yes"
-                sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-dev.yaml"
-                sh "kubectl apply -k ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/dev"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-${params.PROFILE}.yaml"
+                sh "kubectl apply -k ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/${params.PROFILE}"
             }
         }
     }
