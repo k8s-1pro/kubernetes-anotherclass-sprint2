@@ -3,8 +3,4 @@ kind: Service
 metadata:
   name: api-tester-2223
 spec:
-  ports:
-    - name: http
-      port: 80
-      targetPort: http
   type: NodePort
