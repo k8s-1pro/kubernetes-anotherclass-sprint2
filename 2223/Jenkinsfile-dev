@@ -55,7 +55,7 @@ pipeline {
         stage('커스터마이즈 빌드') {
             steps {
                 // K8S 배포
-                echo "kubectl kustomize ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/dev"
+                sh "kubectl kustomize ./${CLASS_NUM}/deploy/kustomize/app-tester/overlays/dev"
             }
         }
 
@@ -63,7 +63,7 @@ pipeline {
             steps {
                 // K8S 배포
                 input message: '배포 시작', ok: "Yes"
-                echo "kubectl apply -k ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/dev"
+                sh "kubectl apply -k ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/dev"
             }
         }
     }
