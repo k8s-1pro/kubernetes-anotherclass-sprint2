@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+
+    parameters {
+        choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE')
+    }
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
         DOCKERHUB_USERNAME = '1pro'
@@ -55,14 +59,14 @@ pipeline {
         stage('헬름 템플릿 확인') {
             steps {
                 // K8S 배포
-                sh "helm template api-tester-2222 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-dev.yaml -n anotherclass-222-dev"
+                sh "helm template api-tester-2222 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${param.PROFILE}.yaml -n anotherclass-222-${param.PROFILE}"
             }
         }
 
         stage('헬름 배포') {
             steps {
                 input message: '배포 시작', ok: "Yes"
-                sh "helm upgrade api-tester-2222 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-dev.yaml -n anotherclass-222-dev --create-namespace --install"
+                sh "helm upgrade api-tester-2222 ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${param.PROFILE}.yaml -n anotherclass-222-${param.PROFILE} --create-namespace --install"
             }
         }
     }
