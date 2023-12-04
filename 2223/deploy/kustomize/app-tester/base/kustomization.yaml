@@ -1,10 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 commonLabels:
-  app: myapp
+  part-of: k8s-anotherclass
+  component: backend-server
+  name: api-tester
+  instance: api-tester-2223
+  version: 1.0.0
 resources:
-  - configmap.yaml
-  - deployment.yaml
-  - secret.yaml
-  - service.yaml
+  - configmap-properties.yaml
+  - deployment-spec.yaml
+  - deployment-ver.yaml
   - hpa.yaml
+  - secret-postgresql.yaml
+  - service.yaml

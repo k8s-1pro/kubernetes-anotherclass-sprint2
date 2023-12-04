@@ -2,13 +2,6 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: api-tester-2223
-  labels:
-    part-of: k8s-anotherclass
-    component: backend-server
-    name: api-tester
-    instance: api-tester-2223
-    version: 1.0.0
-    managed-by: kustomize
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

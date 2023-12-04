@@ -3,31 +3,12 @@ kind: Deployment
 metadata:
   namespace: anotherclass-221
   name: api-tester-2223
-  labels:
-    part-of: k8s-anotherclass
-    component: backend-server
-    name: api-tester
-    instance: api-tester-2223
-    version: 1.0.0
-    managed-by: kustomize
 spec:
-  selector:
-    matchLabels:
-      part-of: k8s-anotherclass
-      component: backend-server
-      name: api-tester
-      instance: api-tester-2223
   replicas: 2
   strategy:
     type: RollingUpdate
   template:
     metadata:
-      labels:
-        part-of: k8s-anotherclass
-        component: backend-server
-        name: api-tester
-        instance: api-tester-2223
-        version: 1.0.0
     spec:
       nodeSelector:
         kubernetes.io/hostname: k8s-master
