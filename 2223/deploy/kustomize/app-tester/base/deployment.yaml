@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: anotherclass-221
   name: api-tester-2223
 spec:
   replicas: 2
