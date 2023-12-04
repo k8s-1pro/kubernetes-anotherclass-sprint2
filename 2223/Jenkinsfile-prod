@@ -63,7 +63,7 @@ pipeline {
             steps {
                 // K8S 배포
                 input message: '배포 시작', ok: "Yes"
-                sh "kubectl apply -k ./${CLASS_NUM}/deploy/kubectl/namespace-prod.yaml"
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-prod.yaml"
                 sh "kubectl apply -k ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/prod"
             }
         }
