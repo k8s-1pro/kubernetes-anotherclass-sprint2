@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+    
+    environment {
+        // 본인의 username으로 하실 분은 수정해주세요.
+        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+
+        // 실습 넘버링
+        CLASS_NUM = '2214'
+    }
+
+    stages {
+
+        stage('릴리즈파일 체크아웃') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']],
+                        extensions: [[$class: 'SparseCheckoutPaths',
+                                      sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+                        userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+            }
+        }
+
+        stage('쿠버네티스 Blue배포') {
+            steps {
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/namespace.yaml"
+		sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/configmap.yaml"
+		sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/secret.yaml"
+		sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/service.yaml"
+		sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
+            }
+        }
+
+        stage('자동배포 시작') {
+            steps {
+                input message: '자동배포 시작', ok: "Yes"
+            }
+        }
+
+        stage('쿠버네티스 Green배포') {
+            steps {
+                sh "kubectl apply -f ./${CLASS_NUM}/deploy/k8s/green/deployment.yaml"
+            }
+        }
+
+        stage('Green 배포 확인중') {
+            steps {
+                script {
+                    def returnValue
+                    while (returnValue != "true true"){
+                        returnValue = sh(returnStdout: true, encoding: 'UTF-8', script: "kubectl get -n anotherclass-221 pods -l instance='api-tester-2214',blue-green-no='2' -o jsonpath='{.items[*].status.containerStatuses[*].ready}'")
+                        echo "${returnValue}"
+                        sleep 5
+                    }
+                }
+            }
+        }
+
+        stage('Green 전환 완료') {
+            steps {
+                sh "kubectl patch -n anotherclass-221 svc api-tester-2214 -p '{\"spec\": {\"selector\": {\"blue-green-no\": \"2\"}}}'"
+            }
+        }
+
+        stage('Blue 삭제') {
+            steps {
+                sh "kubectl delete -f ./${CLASS_NUM}/deploy/k8s/blue/deployment.yaml"
+                sh "kubectl patch -n anotherclass-221 svc api-tester-2214 -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                sh "kubectl patch -n anotherclass-221 cm api-tester-2214-properties -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+                sh "kubectl patch -n anotherclass-221 secret api-tester-2214-postgresql -p '{\"metadata\": {\"labels\": {\"version\": \"2.0.0\"}}}'"
+            }
+        }
+    }
+}
