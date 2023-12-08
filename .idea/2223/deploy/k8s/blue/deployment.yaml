@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: anotherclass-221
+  name: api-tester-2214-1
+  labels:
+    part-of: k8s-anotherclass
+    component: backend-server
+    name: api-tester
+    instance: api-tester-2214
+    version: 1.0.0
+    managed-by: kubectl
+spec:
+  selector:
+    matchLabels:
+      part-of: k8s-anotherclass
+      component: backend-server
+      name: api-tester
+      instance: api-tester-2214
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        part-of: k8s-anotherclass
+        component: backend-server
+        name: api-tester
+        instance: api-tester-2214
+        version: 1.0.0
+        blue-green-no: "1"
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k8s-master
+      containers:
+        - name: api-tester-2214
+          image: 1pro/api-tester:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: api-tester-2214-properties
+          startupProbe:
+            httpGet:
+              path: "/startup"
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: "/readiness"
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: "/liveness"
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+              cpu: "200m"
+          volumeMounts:
+            - name: secret-datasource
+              mountPath: /usr/src/myapp/datasource
+      volumes:
+        - name: secret-datasource
+          secret:
+            secretName: api-tester-2214-postgresql
