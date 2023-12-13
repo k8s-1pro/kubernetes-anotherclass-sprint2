@@ -30,3 +30,6 @@ spec:
           averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 120

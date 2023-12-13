@@ -48,6 +48,15 @@ Selector labels
 {{- define "api-tester.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "api-tester.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/part-of: k8s-anotherclass
-app.kubernetes.io/component: backend-server
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "api-tester.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "api-tester.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
 {{- end }}

@@ -13,14 +13,27 @@ spec:
       {{- include "api-tester.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         {{- include "api-tester.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "api-tester.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -29,7 +42,13 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{ .Values.envFrom.configMapRef }}
+                name: {{ include "api-tester.fullname" . }}-properties
+          startupProbe:
+            httpGet:
+              path: "/startup"
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 24
           livenessProbe:
             httpGet:
               path: "/liveness"
@@ -38,12 +57,6 @@ spec:
             httpGet:
               path: "/readiness"
               port: 8080
-          startupProbe:
-            httpGet:
-              path: "/startup"
-              port: 8080
-            periodSeconds: 5
-            failureThreshold: 24
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
@@ -56,5 +69,13 @@ spec:
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
