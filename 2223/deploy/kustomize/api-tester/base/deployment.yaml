@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-tester-2223
+  name: api-tester-2222
 spec:
   replicas: 2
   strategy:
@@ -12,7 +12,7 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: k8s-master
       containers:
-        - name: api-tester-2223
+        - name: api-tester-2222
           image: 1pro/api-tester:v1.0.0
           imagePullPolicy: Always
           ports:
@@ -20,7 +20,7 @@ spec:
               name: http
           envFrom:
             - configMapRef:
-                name: api-tester-2223-properties
+                name: api-tester-2222-properties
           startupProbe:
             httpGet:
               path: "/startup"
@@ -52,4 +52,4 @@ spec:
       volumes:
         - name: secret-datasource
           secret:
-            secretName: api-tester-2223-postgresql
+            secretName: api-tester-2222-postgresql

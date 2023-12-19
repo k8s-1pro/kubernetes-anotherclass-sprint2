@@ -36,13 +36,13 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 envFrom:
-  configMapRef: api-tester-2222-properties
+  configMapRef: api-tester-2223-properties
 
 # Additional volumes on the output Deployment definition.
 volumes:
   - name: secret-datasource
     secret:
-      secretName: api-tester-2222-postgresql
+      secretName: api-tester-2223-postgresql
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:

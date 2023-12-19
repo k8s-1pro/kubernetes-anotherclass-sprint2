@@ -1,12 +1,12 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: api-tester-2223
+  name: api-tester-2222
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: api-tester-2223
+    name: api-tester-2222
   minReplicas: 1
   maxReplicas: 2
   metrics:

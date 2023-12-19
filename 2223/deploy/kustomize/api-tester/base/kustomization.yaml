@@ -4,7 +4,7 @@ commonLabels:
   part-of: k8s-anotherclass
   component: backend-server
   name: api-tester
-  instance: api-tester-2223
+  instance: api-tester-2222
   managed-by: kustomize
 resources:
   - configmap-properties.yaml
