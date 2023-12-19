@@ -1,0 +1,37 @@
+
+image:
+  repository: 1pro/api-tester
+  pullPolicy: IfNotPresent
+  tag: "v1.0.0"
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 250Mi
+  requests:
+    cpu: 150m
+    memory: 150Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+
+service:
+  nodePort: 32232
+
+configmap:
+  data:
+    properties:
+      spring_profiles_active: "qa"
+      application_role: "ALL"
+      postgresql_filepath: "/usr/src/myapp/datasource/postgresql-info.yaml"
+
+secret:
+  data:
+    postgresql:
+      postgresql-info.yaml: |
+        driver-class-name: "org.postgresql.Driver"
+        url: "jdbc:postgresql://postgresql:5431"
+        username: "qa"
+        password: "qa123"
