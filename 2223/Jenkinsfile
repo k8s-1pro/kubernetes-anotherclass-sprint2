@@ -11,7 +11,7 @@ pipeline {
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
         // 실습 넘버링
-        CLASS_NUM = '2222'
+        CLASS_NUM = '2223'
     }
 
     stages {
@@ -56,19 +56,17 @@ pipeline {
             }
         }
 
-        stage('커스터마이즈 빌드') {
+        stage('헬름 템플릿 확인') {
             steps {
                 // K8S 배포
-                sh "kubectl kustomize ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/${params.PROFILE}"
+                sh "helm template api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml -n anotherclass-222-${params.PROFILE}"
             }
         }
 
-        stage('커스터마이즈 배포') {
+        stage('헬름 배포') {
             steps {
-                // K8S 배포
                 input message: '배포 시작', ok: "Yes"
-                sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-${params.PROFILE}.yaml"
-                sh "kubectl apply -k ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/${params.PROFILE}"
+                sh "helm upgrade api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml -n anotherclass-222-${params.PROFILE} --create-namespace --install"
             }
         }
     }
