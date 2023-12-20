@@ -15,8 +15,8 @@ pipeline {
 
         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
         APP_VERSION = '1.0.1'
-        BUILD_DATE = '$(date +%y).$(date +%m)$(date +%d).$(date +%H)$(date +%M)'
-        TAG = '${APP_VERSION}-${BUILD_DATE}'
+        TAG = "${APP_VERSION}-" + '$(date +%y).$(date +%m)$(date +%d).$(date +%H)$(date +%M)'
+
         // 실습 넘버링
         CLASS_NUM = '2224'
     }
@@ -53,22 +53,31 @@ pipeline {
 
                 script{
                     // 도커 빌드 - [1] 중요 데이터 암호화 관리
-                    dockerImage = docker.build("${DOCKERHUB_USERNAME}/api-tester", "./${CLASS_NUM}/build/docker")
-
-                    // DockerHub로 이미지 업로드 후 삭제
-                    if (DOCKERHUB_USERNAME == "1pro") {
-                        docker.withRegistry("https://registry.hub.docker.com", "docker_password") {
-
-                            // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                            dockerImage.push("${TAG}")
-                            if (${params.IS_MAKE_LATEST} == true) {
-                                dockerImage.push("lastest")
-                                sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:lastest"
-                            }
-                        }
-                        // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
-                        sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}-${BUILD_DATE}"
+                    withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh "echo '${PASSWORD} | docker login -u ${USERNAME} --password-stdin'"
                     }
+
+                    // 도커 빌드
+                    sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:${TAG} ./${CLASS_NUM}/build/docker"
+
+                    if (DOCKERHUB_USERNAME == "1pro") {
+
+                        // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
+                        sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+
+                        // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
+                        sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+
+                        if (${params.IS_MAKE_LATEST} == true) {
+                            sh "docker tag ${DOCKERHUB_USERNAME}/api-tester:${TAG} ${DOCKERHUB_USERNAME}/api-tester:latest"
+                            sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:latest"
+                        }
+                    }
+                }
+            }
+            post {
+                always {
+                    sh "docker logout"
                 }
             }
         }
@@ -94,7 +103,7 @@ pipeline {
                             " --wait --timeout=10m" +   // 최대 10분으로 설정
 
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                            " --set image.tag=${APP_VERSION}-${BUILD_DATE}" +
+                            " --set image.tag=${TAG}" +
                             " --kubeconfig " + '"${KUBECONFIG}"'
                 }
             }
