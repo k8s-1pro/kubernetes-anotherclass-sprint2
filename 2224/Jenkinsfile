@@ -16,6 +16,7 @@ pipeline {
         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
         APP_VERSION = '1.0.1'
         BUILD_DATE = '$(date +%y).$(date +%m)$(date +%d).$(date +%H)$(date +%M)'
+        TAG = ${APP_VERSION} + '-' + ${BUILD_DATE}
         // 실습 넘버링
         CLASS_NUM = '2224'
     }
@@ -32,7 +33,7 @@ pipeline {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
                 sh "chmod +x ./gradlew"
-                sh "./gradlew clean build"
+                //sh "./gradlew clean build"
             }
         }
 
@@ -48,7 +49,7 @@ pipeline {
         stage('컨테이너 빌드 및 업로드') {
             steps {
                 // jar 파일 복사
-                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+                //sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
                 script{
                     // 도커 빌드 - [1] 중요 데이터 암호화 관리
@@ -59,7 +60,7 @@ pipeline {
                         docker.withRegistry("https://registry.hub.docker.com", "docker_password") {
 
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                            dockerImage.push("${APP_VERSION}-${BUILD_DATE}")
+                            dockerImage.push("${TAG}")
                             if (${params.IS_MAKE_LATEST} == true) {
                                 dockerImage.push("lastest")
                                 sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:lastest"
