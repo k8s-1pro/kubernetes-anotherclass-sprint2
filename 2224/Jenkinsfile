@@ -16,7 +16,7 @@ pipeline {
         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
         APP_VERSION = '1.0.1'
         BUILD_DATE = '$(date +%y).$(date +%m)$(date +%d).$(date +%H)$(date +%M)'
-        TAG = ${APP_VERSION} + '-' + ${BUILD_DATE}
+        TAG = '${APP_VERSION}-${BUILD_DATE}'
         // 실습 넘버링
         CLASS_NUM = '2224'
     }
