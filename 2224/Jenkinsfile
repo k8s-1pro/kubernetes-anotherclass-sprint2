@@ -45,18 +45,6 @@ pipeline {
             }
         }
 
-        stage('agent any시 Docker Agent 사용가능 예제') {
-            steps {
-                // jar 파일 복사
-                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
-
-                script{
-                    // 도커 빌드
-                    dockerImage = docker.build("${DOCKERHUB_USERNAME}/api-tester", "./${CLASS_NUM}/build/docker")
-                }
-            }
-        }
-
         stage('컨테이너 빌드 및 업로드') {
             steps {
                 // jar 파일 복사
@@ -68,22 +56,16 @@ pipeline {
 
                     // DockerHub로 이미지 업로드 후 삭제
                     if (DOCKERHUB_USERNAME != "1pro") {
-
-                        // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                        echo "docker push ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}-${BUILD_DATE}"
-
-                        // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
-                        echo "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}-${BUILD_DATE}"
-
-                    } else {
                         docker.withRegistry("https://registry.hub.docker.com", "docker_password") {
-                            dockerImage.push("${APP_VERSION}-${BUILD_DATE}")
 
+                            // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
+                            dockerImage.push("${APP_VERSION}-${BUILD_DATE}")
                             if (${params.IS_MAKE_LATEST} == true) {
                                 dockerImage.push("lastest")
                                 sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:lastest"
                             }
                         }
+                        // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
                         sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}-${BUILD_DATE}"
                     }
                 }
