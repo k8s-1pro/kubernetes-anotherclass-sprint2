@@ -15,7 +15,8 @@ pipeline {
 
         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
         APP_VERSION = '1.0.1'
-        TAG = "${APP_VERSION}-" + '$(date +%y).$(date +%m)$(date +%d).$(date +%H)$(date +%M)'
+        BUILD_DATA = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
+        TAG = "${APP_VERSION}-" + "${BUILD_DATA}"
 
         // 실습 넘버링
         CLASS_NUM = '2224'
@@ -52,29 +53,30 @@ pipeline {
                 //sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
                 script{
+
                     // 도커 빌드 - [1] 중요 데이터 암호화 관리
                     withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                        sh "echo '${PASSWORD} | docker login -u ${USERNAME} --password-stdin'"
+                        sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
                     }
 
                     // 도커 빌드
-                    sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:${TAG} ./${CLASS_NUM}/build/docker"
+                    sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
 
                     if (DOCKERHUB_USERNAME == "1pro") {
-
                         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
                         sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                    }
 
-                        // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
-                        sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                    // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
+                    sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
 
-                        if (${params.IS_MAKE_LATEST} == true) {
-                            sh "docker tag ${DOCKERHUB_USERNAME}/api-tester:${TAG} ${DOCKERHUB_USERNAME}/api-tester:latest"
-                            sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:latest"
-                        }
+                    if (${params.IS_MAKE_LATEST} == true) {
+                        sh "docker tag ${DOCKERHUB_USERNAME}/api-tester:${TAG} ${DOCKERHUB_USERNAME}/api-tester:latest"
+                        sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:latest"
                     }
                 }
             }
+
             post {
                 always {
                     sh "docker logout"
@@ -87,7 +89,7 @@ pipeline {
             steps {
                 // kubectl 명령 사용 - [1] 중요 데이터 암호화 관리
                 withCredentials([file(credentialsId: 'k8s_master_config', variable: 'KUBECONFIG')]) {
-                    sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-${params.PROFILE}.yaml --kubeconfig " + '"${KUBECONFIG}"'
+                    sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-${params.PROFILE}.yaml --kubeconfig " + '${KUBECONFIG}'
                 }
             }
         }
@@ -97,14 +99,13 @@ pipeline {
                 // helm 명령 사용 - [1] 중요 데이터 암호화 관리
                 withCredentials([file(credentialsId: 'k8s_master_config', variable: 'KUBECONFIG')]) {
                     sh "helm upgrade api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml" +
-                            " -n anotherclass-222-${params.PROFILE} --install" +
+                            " -n anotherclass-222-${params.PROFILE} --install --kubeconfig " + '${KUBECONFIG}' +
 
                             // [5] Helm 부가기능
                             " --wait --timeout=10m" +   // 최대 10분으로 설정
 
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                            " --set image.tag=${TAG}" +
-                            " --kubeconfig " + '"${KUBECONFIG}"'
+                            " --set image.tag=${TAG}"
                 }
             }
         }
