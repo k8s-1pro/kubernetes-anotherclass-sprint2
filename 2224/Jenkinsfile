@@ -93,7 +93,7 @@ pipeline {
                             " --wait --timeout=10m" +   // 최대 10분으로 설정
 
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                            " -set image.tag=${APP_VERSION}-${BUILD_DATE}" +
+                            " --set image.tag=${APP_VERSION}-${BUILD_DATE}" +
                             " --kubeconfig " + '"${KUBECONFIG}"'
                 }
             }
