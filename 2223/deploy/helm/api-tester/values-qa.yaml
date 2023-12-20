@@ -1,7 +1,7 @@
 
 image:
   repository: 1pro/api-tester
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "v1.0.0"
 
 resources:

@@ -8,4 +8,4 @@ spec:
       containers:
         - name: api-tester-2222
           image: 1pro/api-tester:v1.0.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
