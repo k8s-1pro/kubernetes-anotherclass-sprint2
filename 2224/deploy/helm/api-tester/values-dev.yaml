@@ -1,8 +1,10 @@
 
+replicaCount: 1
+
 image:
   repository: 1pro/api-tester
   pullPolicy: Always
-  tag: "v2.0.0"
+  tag: v1.0.0
 
 resources:
   limits:
@@ -11,11 +13,6 @@ resources:
   requests:
     cpu: 100m
     memory: 100Mi
-
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 2
 
 service:
   nodePort: 32224

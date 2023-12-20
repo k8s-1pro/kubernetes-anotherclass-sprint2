@@ -107,6 +107,9 @@ pipeline {
                     sh "helm upgrade api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml" +
                             " -n anotherclass-222-${params.PROFILE} --install" +
 
+                            // [5] Helm 부가기능
+                            " --wait --timeout=10m" +   // 최대 10분으로 설정
+
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
                             " -set image.tag=${APP_VERSION}-${BUILD_DATE}" +
                             " --kubeconfig " + '"${KUBECONFIG}"'
