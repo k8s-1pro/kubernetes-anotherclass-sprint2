@@ -6,9 +6,8 @@ commonLabels:
 resources:
   - ../../base
 patches:
-  - path: configmap-properties.yaml
+  - path: configmap.yaml
   - path: deployment-spec.yaml
   - path: deployment-ver.yaml
-  - path: hpa.yaml
-  - path: secret-postgresql.yaml
+  - path: secret.yaml
   - path: service.yaml

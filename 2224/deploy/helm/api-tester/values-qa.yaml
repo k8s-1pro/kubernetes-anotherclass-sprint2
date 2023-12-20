@@ -18,7 +18,7 @@ autoscaling:
   maxReplicas: 4
 
 service:
-  nodePort: 32232
+  nodePort: 32234
 
 configmap:
   data:

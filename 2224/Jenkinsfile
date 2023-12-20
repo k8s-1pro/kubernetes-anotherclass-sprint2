@@ -2,7 +2,10 @@ pipeline {
     agent any
 
     parameters {
-        choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE')
+        // 배포 환경 선택
+        choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE', description: '배포 환경 선택')
+        // Latest 이미지 생성 여부 - [2] 잦은 배포, versioning 무의미, 계획된 배포, versioning 필수
+        booleanParam(defaultValue: false, name: 'IS_MAKE_LATEST', description: 'Latest 이미지 생성 여부')
     }
 
     environment {
@@ -10,6 +13,9 @@ pipeline {
         DOCKERHUB_USERNAME = '1pro'
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
+        // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
+        APP_VERSION = '1.0.1'
+        BUILD_DATE = '$(date +%y).$(date +%m)$(date +%d).$(date +%H)$(date +%M)'
         // 실습 넘버링
         CLASS_NUM = '2224'
     }
@@ -25,8 +31,8 @@ pipeline {
         stage('소스 빌드') {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
-                echo "chmod +x ./gradlew"
-                echo "./gradlew clean build"
+                sh "chmod +x ./gradlew"
+                sh "./gradlew clean build"
             }
         }
 
@@ -39,56 +45,72 @@ pipeline {
             }
         }
 
-        stage('컨테이너 빌드') {
+        stage('agent any시 Docker Agent 사용가능 예제') {
             steps {
                 // jar 파일 복사
-                echo "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
                 script{
                     // 도커 빌드
                     dockerImage = docker.build("${DOCKERHUB_USERNAME}/api-tester", "./${CLASS_NUM}/build/docker")
+                }
+            }
+        }
 
-                    // DockerHub로 이미지 업로드
-                    if (DOCKERHUB_USERNAME == "1pro") {
-                        echo "docker push ${DOCKERHUB_USERNAME}/api-tester:1.0.0"
+        stage('컨테이너 빌드 및 업로드') {
+            steps {
+                // jar 파일 복사
+                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+
+                script{
+                    // 도커 빌드 - [1] 중요 데이터 암호화 관리
+                    dockerImage = docker.build("${DOCKERHUB_USERNAME}/api-tester", "./${CLASS_NUM}/build/docker")
+
+                    // DockerHub로 이미지 업로드 후 삭제
+                    if (DOCKERHUB_USERNAME != "1pro") {
+
+                        // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
+                        echo "docker push ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}-${BUILD_DATE}"
+
+                        // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
+                        echo "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}-${BUILD_DATE}"
+
                     } else {
                         docker.withRegistry("https://registry.hub.docker.com", "docker_password") {
-                            dockerImage.push("1.0.0")
+                            dockerImage.push("${APP_VERSION}-${BUILD_DATE}")
+
+                            if (${params.IS_MAKE_LATEST} == true) {
+                                dockerImage.push("lastest")
+                                sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:lastest"
+                            }
                         }
+                        sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}-${BUILD_DATE}"
                     }
                 }
             }
         }
 
-        stage('컨테이너 업로드') {
+        // [4] 네임스페이스는 배포와 별도로 관리
+        stage('네임스페이스 생성') { // 배포시 apply로 Namespace 생성 or 배포와 별개로 미리 생성 (추후 삭제시 별도 삭제)
             steps {
-                // DockerHub로 이미지 업로드
-                echo "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
-            }
-        }
-
-        stage('네임스페이스 생성') {
-            steps {
-                // K8S 배포
+                // kubectl 명령 사용 - [1] 중요 데이터 암호화 관리
                 withCredentials([file(credentialsId: 'k8s_master_config', variable: 'KUBECONFIG')]) {
-                    kubectl apply ns
-                    sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-${params.PROFILE}.yaml --kubeconfig"
+                    sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-${params.PROFILE}.yaml --kubeconfig " + '"${KUBECONFIG}"'
                 }
-                    sh "helm template api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml -n anotherclass-222-${params.PROFILE}"
-            }
-        }
-
-        stage('헬름 템플릿 확인') {
-            steps {
-                // K8S 배포
-                sh "helm template api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml -n anotherclass-222-${params.PROFILE}"
             }
         }
 
         stage('헬름 배포') {
             steps {
-                input message: '배포 시작', ok: "Yes"
-                sh "helm upgrade api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml -n anotherclass-222-${params.PROFILE} --create-namespace --install"
+                // helm 명령 사용 - [1] 중요 데이터 암호화 관리
+                withCredentials([file(credentialsId: 'k8s_master_config', variable: 'KUBECONFIG')]) {
+                    sh "helm upgrade api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml" +
+                            " -n anotherclass-222-${params.PROFILE} --install" +
+
+                            // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
+                            " -set image.tag=${APP_VERSION}-${BUILD_DATE}" +
+                            " --kubeconfig " + '"${KUBECONFIG}"'
+                }
             }
         }
     }

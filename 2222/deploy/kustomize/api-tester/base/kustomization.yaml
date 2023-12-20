@@ -7,8 +7,7 @@ commonLabels:
   instance: api-tester-2222
   managed-by: kustomize
 resources:
-  - configmap-properties.yaml
+  - configmap.yaml
   - deployment.yaml
-  - hpa.yaml
-  - secret-postgresql.yaml
+  - secret.yaml
   - service.yaml

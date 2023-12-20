@@ -13,6 +13,7 @@ spec:
       {{- include "api-tester.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      # [5] Helm 배포 후 Pod 업그레이드가 안될 수 있음
       # 이미지 변경이 없는 새 배포를 위해 랜덤값 적용
       #annotations:
       #  rollme: {{ randAlphaNum 5 | quote }}

@@ -1,7 +1,0 @@
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: api-tester-2222
-spec:
-  minReplicas: 2
-  maxReplicas: 4
