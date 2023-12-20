@@ -4,8 +4,6 @@ pipeline {
     parameters {
         // 배포 환경 선택
         choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE', description: '배포 환경 선택')
-        // Latest 이미지 생성 여부 - [2] 잦은 배포, versioning 무의미, 계획된 배포, versioning 필수
-        // booleanParam(defaultValue: false, name: 'IS_MAKE_LATEST', description: 'Latest 이미지 생성 여부')
     }
 
     environment {
@@ -15,7 +13,7 @@ pipeline {
 
         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
         APP_VERSION = '1.0.1'
-        BUILD_DATA = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
+        BUILD_DATE = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
         TAG = "${APP_VERSION}-" + "${BUILD_DATA}"
 
         // 실습 넘버링
@@ -34,7 +32,7 @@ pipeline {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
                 sh "chmod +x ./gradlew"
-                sh "./gradlew clean build"
+                //sh "./gradlew clean build"
             }
         }
 
@@ -50,7 +48,7 @@ pipeline {
         stage('컨테이너 빌드 및 업로드') {
             steps {
                 // jar 파일 복사
-                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+                //sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
                 script{
 
@@ -69,11 +67,6 @@ pipeline {
 
                     // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
                     sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-
-//                    if (${params.IS_MAKE_LATEST} == true) {
-//                        sh "docker tag ${DOCKERHUB_USERNAME}/api-tester:${TAG} ${DOCKERHUB_USERNAME}/api-tester:latest"
-//                        sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:latest"
-//                    }
                 }
             }
 
