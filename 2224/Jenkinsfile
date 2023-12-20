@@ -55,7 +55,7 @@ pipeline {
                     dockerImage = docker.build("${DOCKERHUB_USERNAME}/api-tester", "./${CLASS_NUM}/build/docker")
 
                     // DockerHub로 이미지 업로드 후 삭제
-                    if (DOCKERHUB_USERNAME != "1pro") {
+                    if (DOCKERHUB_USERNAME == "1pro") {
                         docker.withRegistry("https://registry.hub.docker.com", "docker_password") {
 
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
