@@ -61,7 +61,7 @@ pipeline {
                 // K8S 배포
                 sh "helm template api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester" +
                    " -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml -n anotherclass-222-${params.PROFILE}"
-                // --set port='80' --set profile='dev' --set nodeport='32223'
+                // --set replicaCount='3' --set port='80' --set profile='dev' --set nodeport='32223'
             }
         }
 
