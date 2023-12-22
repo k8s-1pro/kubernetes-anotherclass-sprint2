@@ -32,7 +32,7 @@ pipeline {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
                 sh "chmod +x ./gradlew"
-                //sh "./gradlew clean build"
+                sh "./gradlew clean build"
             }
         }
 
@@ -48,7 +48,7 @@ pipeline {
         stage('컨테이너 빌드 및 업로드') {
             steps {
                 // jar 파일 복사
-                //sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
                 script{
 
@@ -60,7 +60,7 @@ pipeline {
                     // 도커 빌드
                     sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
 
-                    if (DOCKERHUB_USERNAME == "1pro") {
+                    if (DOCKERHUB_USERNAME != "1pro") {
                         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
                         sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
                     }
@@ -98,7 +98,8 @@ pipeline {
                             " --wait --timeout=10m" +   // 최대 10분으로 설정
 
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                            " --set image.tag=${TAG}"
+                            " --set image.tag=${TAG}" +
+                            " --set image.repository=${DOCKERHUB_USERNAME}/api-tester"
                 }
             }
         }
