@@ -60,7 +60,16 @@ pipeline {
                     // 도커 빌드
                     sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
 
-                    if (DOCKERHUB_USERNAME != "1pro") {
+                    if (DOCKERHUB_USERNAME == "1pro") {
+                        TAG = "1.0.1-231220.175735"  // 1pro useranme 수강생을 위한 고정 태그명
+
+                        // 도커 빌드
+                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                    } else {
+
+                        // 도커 빌드
+                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+
                         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
                         sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
                     }
