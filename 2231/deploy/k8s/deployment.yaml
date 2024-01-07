@@ -67,9 +67,14 @@ spec:
               memory: "200Mi"
               cpu: "200m"
           volumeMounts:
+            - name: files
+              mountPath: /usr/src/myapp/files/dev
             - name: secret-datasource
               mountPath: /usr/src/myapp/datasource
       volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: api-tester-2231-files
         - name: secret-datasource
           secret:
             secretName: api-tester-2231-postgresql
