@@ -1,7 +1,10 @@
 pipeline {
     agent any
 
-
+    tools {
+        gradle 'gradle-7.6.1'
+        jdk 'jdk-17'
+    }
 
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
