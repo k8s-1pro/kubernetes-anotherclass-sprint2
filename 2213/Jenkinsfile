@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
