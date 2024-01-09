@@ -83,11 +83,18 @@ pipeline {
             }
         }
 
-        stage('태그 업데이트') {
+        stage('깃허브 태그 업데이트') {
             steps {
+
+                sh '''
+                git config --global user.name "k8s-1pro"
+                git config --global user.email "k8s.1pro@gmail.com"
+                git config --global credential.helper store
+                '''
+
                 sh '''                    
-                sed -i "s/api-tester:*/api-tester:${TAG}/" ${CLASS_NUM}/deploy/k8s/deployment.yaml
-                git add --all
+                sed -i "s%${DOCKERHUB_USERNAME}/api-tester:*%${DOCKERHUB_USERNAME}/api-tester:${TAG}%" ${CLASS_NUM}/deploy/k8s/deployment.yaml
+                git add ${CLASS_NUM}/deploy/k8s/deployment.yaml
                 git commit -m "Api Tester Tag Update by Jenkins-$BUILD_NUMBER "
                 git push origin main
                 '''
