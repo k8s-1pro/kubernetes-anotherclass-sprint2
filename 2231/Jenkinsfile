@@ -25,7 +25,7 @@ pipeline {
                     sed -i "s%${DOCKERHUB_USERNAME}/api-tester:.*%${DOCKERHUB_USERNAME}/api-tester:${TAG}%" ${CLASS_NUM}/deploy/k8s/deployment.yaml
                     git add ${CLASS_NUM}/deploy/k8s/deployment.yaml
                     git commit -m "Api Tester Tag Update by Jenkins-$BUILD_NUMBER "
-                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${GITHUB_URL}                    
+                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${GITHUB_URL} main
                     '''
                 }
             }
