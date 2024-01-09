@@ -20,13 +20,14 @@ pipeline {
     stages {
         stage('깃허브 태그 업데이트') {
             steps {
-                sh '''
-                    git config --global credential.helper store
-                    sed -i "s%${DOCKERHUB_USERNAME}/api-tester:*%${DOCKERHUB_USERNAME}/api-tester:${TAG}%" ${CLASS_NUM}/deploy/k8s/deployment.yaml
+                withCredentials([usernamePassword(credentialsId: 'github_password', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    sh '''
+                    sed -i "s%${DOCKERHUB_USERNAME}/api-tester:.*%${DOCKERHUB_USERNAME}/api-tester:${TAG}%" ${CLASS_NUM}/deploy/k8s/deployment.yaml
                     git add ${CLASS_NUM}/deploy/k8s/deployment.yaml
                     git commit -m "Api Tester Tag Update by Jenkins-$BUILD_NUMBER "
-                    git push origin main
-                '''
+                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${GITHUB_URL}                    
+                    '''
+                }
             }
         }
     }
