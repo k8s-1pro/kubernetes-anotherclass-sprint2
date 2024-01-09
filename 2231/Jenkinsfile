@@ -18,15 +18,6 @@ pipeline {
     }
     
     stages {
-        stage('릴리즈파일 체크아웃') {
-            steps {
-                checkout scmGit(branches: [[name: '*/main']],
-                    extensions: [[$class: 'SparseCheckoutPaths',
-                    sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
-					userRemoteConfigs: [[credentialsId: 'github_password', url: "${GITHUB_URL}"]])
-            }
-        }
-
         stage('깃허브 태그 업데이트') {
             steps {
                 sh '''     
