@@ -1,10 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-        gradle 'gradle-7.6.1'
-        jdk 'jdk-17'
-    }
+
 
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
@@ -21,21 +18,6 @@ pipeline {
     }
     
     stages {
-        stage('소스파일 체크아웃') {
-            steps {
-                // 소스코드를 가져올 Github 주소
-                git branch: 'main', url: 'https://github.com/k8s-1pro/kubernetes-anotherclass-api-tester.git'
-            }
-        }
-
-        stage('소스 빌드') {
-            steps {
-                // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
-                sh "chmod +x ./gradlew"
-                sh "./gradlew clean build"
-            }
-        }
-
         stage('릴리즈파일 체크아웃') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']],
@@ -45,58 +27,13 @@ pipeline {
             }
         }
 
-        stage('컨테이너 빌드 및 업로드') {
-            steps {
-                // jar 파일 복사
-                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
-
-                script{
-
-                    // 도커 빌드 - [1] 중요 데이터 암호화 관리
-                    withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                        sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
-                    }
-
-                    if (DOCKERHUB_USERNAME != "1pro") {
-                        TAG = "1.0.1-231220.175735"  // 1pro useranme 수강생을 위한 고정 태그명
-
-                        // 도커 빌드
-                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-                    } else {
-
-                        // 도커 빌드
-                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-
-                        // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
-                        sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-                    }
-
-                    // [3] 업로드 후 CI/CD Server에 만들어진 이미지 삭제
-                    sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-                }
-            }
-
-            post {
-                always {
-                    sh "docker logout"
-                }
-            }
-        }
-
         stage('깃허브 태그 업데이트') {
             steps {
-
-                sh '''
-                git config --global user.name "k8s-1pro"
-                git config --global user.email "k8s.1pro@gmail.com"
-                git config --global credential.helper store
-                '''
-
-                sh '''                    
-                sed -i "s%${DOCKERHUB_USERNAME}/api-tester:*%${DOCKERHUB_USERNAME}/api-tester:${TAG}%" ${CLASS_NUM}/deploy/k8s/deployment.yaml
-                git add ${CLASS_NUM}/deploy/k8s/deployment.yaml
-                git commit -m "Api Tester Tag Update by Jenkins-$BUILD_NUMBER "
-                git push origin main
+                sh '''     
+                    sed -i "s%${DOCKERHUB_USERNAME}/api-tester:*%${DOCKERHUB_USERNAME}/api-tester:${TAG}%" ${CLASS_NUM}/deploy/k8s/deployment.yaml
+                    git add .
+                    git commit -m "Api Tester Tag Update by Jenkins-$BUILD_NUMBER "
+                    git push origin main
                 '''
             }
         }
