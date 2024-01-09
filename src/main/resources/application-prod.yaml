@@ -1,4 +1,0 @@
-
-volume-path:
-  persistent-volume-data: "/usr/src/myapp/files/prod/"
-  pod-volume-data: "/usr/src/myapp/tmp/"
