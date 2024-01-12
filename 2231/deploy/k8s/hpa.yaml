@@ -1,7 +1,6 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  namespace: anotherclass-223
   name: api-tester-2231-default
   labels:
     part-of: k8s-anotherclass
