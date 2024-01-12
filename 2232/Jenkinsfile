@@ -40,6 +40,15 @@ pipeline {
             }
         }
 
+        stage('릴리즈파일 체크아웃') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']],
+                        extensions: [[$class: 'SparseCheckoutPaths',
+                                      sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+                        userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+            }
+        }
+
         stage('컨테이너 빌드 및 업로드') {
             steps {
                 // jar 파일 복사
