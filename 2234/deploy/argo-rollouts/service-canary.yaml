@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-tester-2233-active
+  name: api-tester-2234-canary
   labels:
     part-of: k8s-anotherclass
     component: backend-server
     name: api-tester
-    instance: api-tester-2233
+    instance: api-tester-2234
     version: 1.0.0
     managed-by: kubectl
 spec:
@@ -14,9 +14,9 @@ spec:
     part-of: k8s-anotherclass
     component: backend-server
     name: api-tester
-    instance: api-tester-2233
+    instance: api-tester-2234
   ports:
     - port: 80
       targetPort: http
-      nodePort: 32233
+      nodePort: 32234
   type: NodePort

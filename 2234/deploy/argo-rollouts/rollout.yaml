@@ -1,40 +1,44 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: api-tester-2233
+  name: api-tester-2234
   labels:
     part-of: k8s-anotherclass
     component: backend-server
     name: api-tester
-    instance: api-tester-2233
+    instance: api-tester-2234
     version: 1.0.0
     managed-by: kubectl
 spec:
   replicas: 2
   strategy:
-    blueGreen:
-      activeService: api-tester-2233-active
-      previewService: api-tester-2233-preview
-      autoPromotionEnabled: false
+    canary:
+      canaryService: api-tester-2234-canary
+      stableService: api-tester-2234-stable
+      maxSurge: "25%"
+      maxUnavailable: 0
+      steps:
+        - pause:
+            duration: 2m
   selector:
     matchLabels:
       part-of: k8s-anotherclass
       component: backend-server
       name: api-tester
-      instance: api-tester-2233
+      instance: api-tester-2234
   template:
     metadata:
       labels:
         part-of: k8s-anotherclass
         component: backend-server
         name: api-tester
-        instance: api-tester-2233
+        instance: api-tester-2234
         version: 1.0.0
     spec:
       nodeSelector:
         kubernetes.io/hostname: k8s-master
       containers:
-        - name: api-tester-2233
+        - name: api-tester-2234
           image: 1pro/api-tester:1.0.0
           imagePullPolicy: Always
           ports:
@@ -42,7 +46,7 @@ spec:
               name: http
           envFrom:
             - configMapRef:
-                name: api-tester-2233-properties
+                name: api-tester-2234-properties
           startupProbe:
             httpGet:
               path: "/startup"
@@ -74,4 +78,4 @@ spec:
       volumes:
         - name: secret-datasource
           secret:
-            secretName: api-tester-2233-postgresql
+            secretName: api-tester-2234-postgresql
