@@ -13,8 +13,8 @@ spec:
   replicas: 2
   strategy:
     canary:
-      canaryService: api-tester-2234-canary
       stableService: api-tester-2234-stable
+      canaryService: api-tester-2234-canary
       maxSurge: "25%"
       maxUnavailable: 0
       steps:
