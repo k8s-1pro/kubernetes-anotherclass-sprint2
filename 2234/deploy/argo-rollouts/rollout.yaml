@@ -10,7 +10,7 @@ metadata:
     version: 1.0.0
     managed-by: kubectl
 spec:
-  replicas: 2
+  replicas: 4
   strategy:
     canary:
       stableService: api-tester-2234-stable
