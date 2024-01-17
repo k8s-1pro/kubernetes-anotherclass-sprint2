@@ -10,16 +10,16 @@ metadata:
     version: 1.0.0
     managed-by: kubectl
 spec:
-  replicas: 4
+  replicas: 2
   strategy:
     canary:
       stableService: api-tester-2234-stable
       canaryService: api-tester-2234-canary
-      maxSurge: "25%"
+      maxSurge: "50%"
       maxUnavailable: 0
       steps:
         - pause:
-            duration: 2m
+            duration: 3m
   selector:
     matchLabels:
       part-of: k8s-anotherclass
