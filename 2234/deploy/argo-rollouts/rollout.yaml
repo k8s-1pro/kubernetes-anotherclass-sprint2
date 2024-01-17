@@ -10,12 +10,14 @@ metadata:
     version: 1.0.0
     managed-by: kubectl
 spec:
-  replicas: 3
+  replicas: 2
   strategy:
     canary:
-      maxSurge: "33%"
+      maxSurge: "50%"
       maxUnavailable: "100%"
       steps:
+        - setWeight: 25
+        - pause: {}
         - setWeight: 50
         - pause: {}
   selector:
