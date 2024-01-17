@@ -13,12 +13,10 @@ spec:
   replicas: 2
   strategy:
     canary:
-      maxSurge: "50%"
-      maxUnavailable: "0%"
       steps:
-        - setWeight: 25
+        - setWeight: 33
         - pause: {}
-        - setWeight: 50
+        - setWeight: 66
         - pause: { duration: 2m }
   selector:
     matchLabels:
@@ -39,7 +37,7 @@ spec:
         kubernetes.io/hostname: k8s-master
       containers:
         - name: api-tester-2234
-          image: 1pro/api-tester:1.0.1
+          image: 1pro/api-tester:1.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
