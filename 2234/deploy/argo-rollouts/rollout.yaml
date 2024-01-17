@@ -19,7 +19,7 @@ spec:
         - setWeight: 25
         - pause: {}
         - setWeight: 50
-        - pause: {}
+        - pause: { duration: 2m }
   selector:
     matchLabels:
       part-of: k8s-anotherclass
