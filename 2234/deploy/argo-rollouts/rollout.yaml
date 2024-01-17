@@ -18,8 +18,7 @@ spec:
       maxSurge: "50%"
       maxUnavailable: 0
       steps:
-        - pause:
-            duration: 3m
+        - pause: {}
   selector:
     matchLabels:
       part-of: k8s-anotherclass
