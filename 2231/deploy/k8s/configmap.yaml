@@ -14,4 +14,3 @@ data:
   application_role: "ALL"
   postgresql_filepath: "/usr/src/myapp/datasource/postgresql-info.yaml"
   data: "content"
-  git: "changed"
