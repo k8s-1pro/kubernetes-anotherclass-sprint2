@@ -16,7 +16,7 @@ pipeline {
         DOCKERHUB_USERNAME = '1pro'
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
-        APP_VERSION = '1.0.0'
+        APP_VERSION = '1.0.1'
         BUILD_DATE = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
         TAG = "${APP_VERSION}-" + "${BUILD_DATE}"
 
