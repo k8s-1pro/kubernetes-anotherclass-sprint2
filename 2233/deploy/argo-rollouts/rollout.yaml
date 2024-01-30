@@ -35,7 +35,7 @@ spec:
         kubernetes.io/hostname: k8s-master
       containers:
         - name: api-tester-2233
-          image: 1pro/api-tester:2.0.0
+          image: 1pro/api-tester:1.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
