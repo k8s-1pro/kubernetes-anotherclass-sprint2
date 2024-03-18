@@ -31,7 +31,7 @@ pipeline {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
                 echo "chmod +x ./gradlew"
-                echo "./gradlew clean build"
+                echo "gradle clean build"
             }
         }
 
