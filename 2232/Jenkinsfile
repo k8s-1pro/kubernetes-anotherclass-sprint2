@@ -13,7 +13,7 @@ pipeline {
 
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
-        DOCKERHUB_USERNAME = '1pro'
+        DOCKERHUB_USERNAME = 'zzingo5'
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
         APP_VERSION = '1.1.1'
