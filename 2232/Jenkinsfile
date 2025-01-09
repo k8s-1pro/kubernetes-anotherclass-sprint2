@@ -18,6 +18,7 @@ pipeline {
 
         APP_VERSION = '1.1.1'
         BUILD_DATE = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
+        // 위에 date 포맷 오류가 있어요. %y%m%d.%H%M%S가 맞습니다)
         TAG = "${APP_VERSION}-" + "${BUILD_DATE}"
 
         // 실습 넘버링
