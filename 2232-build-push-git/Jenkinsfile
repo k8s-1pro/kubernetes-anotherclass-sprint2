@@ -16,7 +16,7 @@ pipeline {
         DOCKERHUB_USERNAME = '1pro'
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
-        APP_VERSION = '1.1.1'
+        APP_VERSION = 'test'
         BUILD_DATE = sh(script: "echo `date +%y%m%d.%H%M%S`", returnStdout: true).trim()
 
         TAG = "${APP_VERSION}-" + "${BUILD_DATE}"
@@ -63,13 +63,8 @@ pipeline {
                     }
 
                     // 도커 빌드 및 업로드
-                    if (DOCKERHUB_USERNAME == "1pro") {
-                        TAG = "1.0.1-231220.175735"  // 1pro useranme 수강생을 위한 고정 태그명
-                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-                    } else {
-                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-                        sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-                    }
+                    sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                    sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
 
                     // 도커 이미지 삭제
                     sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
