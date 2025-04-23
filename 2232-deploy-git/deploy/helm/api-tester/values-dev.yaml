@@ -14,9 +14,6 @@ resources:
     cpu: 100m
     memory: 100Mi
 
-service:
-  nodePort: 32232
-
 configmap:
   data:
     properties:
