@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+
+    tools {
+        gradle 'gradle-7.6.1'
+        jdk 'jdk-17'
+    }
+
+    parameters {
+        // 배포 환경 선택
+        choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE', description: '배포 환경 선택')
+    }
+
+    environment {
+        // 본인의 username으로 하실 분은 수정해주세요.
+        DOCKERHUB_USERNAME = '1pro'
+        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+
+        APP_VERSION = '1.1.1'
+        BUILD_DATE = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
+        // 위에 date 포맷 오류가 있어요. %y%m%d.%H%M%S가 맞습니다)
+        TAG = "${APP_VERSION}-" + "${BUILD_DATE}"
+
+        // 실습 넘버링
+        CLASS_NUM = '2232'
+    }
+
+    stages {
+        stage('소스파일 체크아웃') {
+            steps {
+                // 소스코드를 가져올 Github 주소
+                git branch: 'main', url: 'https://github.com/k8s-1pro/kubernetes-anotherclass-api-tester.git'
+            }
+        }
+
+        stage('소스 빌드') {
+            steps {
+                // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
+                sh "chmod +x ./gradlew"
+                sh "gradle clean build"
+            }
+        }
+
+        stage('릴리즈파일 체크아웃') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']],
+                        extensions: [[$class: 'SparseCheckoutPaths',
+                                      sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+                        userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+            }
+        }
+
+        stage('컨테이너 빌드 및 업로드') {
+            steps {
+                // jar 파일 복사
+                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+
+                script{
+
+                    // 도커 로그인
+                    withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
+                    }
+
+                    // 도커 빌드 및 업로드
+                    if (DOCKERHUB_USERNAME == "1pro") {
+                        TAG = "1.0.1-231220.175735"  // 1pro useranme 수강생을 위한 고정 태그명
+                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                    } else {
+                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                        sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                    }
+
+                    // 도커 이미지 삭제
+                    sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                }
+            }
+
+            post {
+                always {
+                    // 도커 로그아웃
+                    sh "docker logout"
+                }
+            }
+        }
+    }
+}
