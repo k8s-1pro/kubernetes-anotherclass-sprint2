@@ -40,9 +40,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort
+  type: CluserIP
   port: 80
-  nodePort: 32232
 
 ingress:
   enabled: false
