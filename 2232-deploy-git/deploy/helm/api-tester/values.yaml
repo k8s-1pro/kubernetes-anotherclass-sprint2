@@ -40,7 +40,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: CluserIP
+  type: ClusterIP
   port: 80
 
 ingress:
