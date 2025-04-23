@@ -12,8 +12,9 @@ pipeline {
     }
 
     environment {
-        // 본인의 username으로 수정해 주세요.
+        // 1pro를 본인의 username으로 수정해 주세요.
         DOCKERHUB_USERNAME = '1pro'
+        // k8s-1pro를 본인의 username으로 수정해 주세요.
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
         APP_VERSION = 'git'
@@ -86,7 +87,8 @@ pipeline {
                     def valuesFile = "values-${params.PROFILE}.yaml"
 
                     // image.tag 값 수정
-                    sh "sed -i 's|\\(image:\\s*\\n\\s*repository:.*\\n\\s*tag:\\s*\\).*|\\1${TAG}|' ${valuesFile}"
+                    sh "sed -i 's|^  repository:.*|  repository: ${DOCKERHUB_USERNAME}/api-tester|' ${valuesFile}"
+                    sh "sed -i 's|^  tag:.*|  tag: \\"${TAG}\\"|' ${valuesFile}"
 
                     withCredentials([usernamePassword(credentialsId: 'github_token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                         sh """
