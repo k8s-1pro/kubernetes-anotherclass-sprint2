@@ -17,8 +17,8 @@ pipeline {
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
         APP_VERSION = '1.1.1'
-        BUILD_DATE = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
-        // 위에 date 포맷 오류가 있어요. %y%m%d.%H%M%S가 맞습니다)
+        BUILD_DATE = sh(script: "echo `date +%y%m%d.%H%M%S`", returnStdout: true).trim()
+
         TAG = "${APP_VERSION}-" + "${BUILD_DATE}"
 
         // 실습 넘버링
