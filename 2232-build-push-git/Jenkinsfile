@@ -79,7 +79,6 @@ pipeline {
             }
         }
 
-// 주석 해제 후 사용 (영역 지정 Ctrl + /)
         stage('Helm values 파일 업데이트 및 GitHub 푸시') {
             steps {
                 script {
