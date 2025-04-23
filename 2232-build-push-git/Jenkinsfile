@@ -12,17 +12,17 @@ pipeline {
     }
 
     environment {
-        // 본인의 username으로 하실 분은 수정해주세요.
+        // 본인의 username으로 수정해 주세요.
         DOCKERHUB_USERNAME = '1pro'
         GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
 
-        APP_VERSION = 'test'
+        APP_VERSION = 'git'
         BUILD_DATE = sh(script: "echo `date +%y%m%d.%H%M%S`", returnStdout: true).trim()
 
         TAG = "${APP_VERSION}-" + "${BUILD_DATE}"
 
         // 실습 넘버링
-        CLASS_NUM = '2232'
+        CLASS_NUM = '2232-build-push-git'
     }
 
     stages {
@@ -75,6 +75,32 @@ pipeline {
                 always {
                     // 도커 로그아웃
                     sh "docker logout"
+                }
+            }
+        }
+
+// 주석 해제 후 사용 (영역 지정 Ctrl + /)
+        stage('Helm values 파일 업데이트 및 GitHub 푸시') {
+            steps {
+                script {
+
+                    def valuesFile = "values-${params.PROFILE}.yaml"
+
+                    // image.tag 값 수정
+                    sh "sed -i 's|\\(image:\\s*\\n\\s*repository:.*\\n\\s*tag:\\s*\\).*|\\1${TAG}|' ${valuesFile}"
+
+                    withCredentials([usernamePassword(credentialsId: 'github_token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        sh """
+                            git config user.email "k8s.1pro@gmail.com"
+                            git config user.name "1pro"
+
+                            git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git
+
+                            git add ${valuesFile}
+                            git commit -m "Update ${valuesFile} with new image tag: ${TAG}"
+                            git push origin HEAD:main
+                        """
+                    }
                 }
             }
         }
