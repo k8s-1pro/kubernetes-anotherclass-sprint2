@@ -58,23 +58,7 @@ pipeline {
             }
         }
 
-        stage('컨테이너 빌드') {
-            steps {
-                // jar 파일 복사
-                //sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
-                // 도커 빌드
-                //sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:v1.0.0 ./${CLASS_NUM}/build/docker"
-            }
-        }
-
-        stage('컨테이너 업로드') {
-            steps {
-                // DockerHub로 이미지 업로드
-                // 항상 본인의 Docker Hub에서 빌드가 되도록 수정 됨
-                //sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
-            }
-        }
 
         stage('쿠버네티스 배포') {
             steps {
