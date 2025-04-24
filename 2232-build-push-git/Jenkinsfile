@@ -100,10 +100,11 @@ pipeline {
 
 
                     def valuesFile = "./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml"
-                    echo ${valuesFile}
+
 
                     // image.tag 값 수정
                     sh '''
+                        echo ${valuesFile}
                         sed -i 's|^  repository:.*|  repository: ${DOCKERHUB_USERNAME}/api-tester|' ${valuesFile}
                         sed -i 's|^  tag:.*|  tag: "${TAG}"|' ${valuesFile}
                     '''
