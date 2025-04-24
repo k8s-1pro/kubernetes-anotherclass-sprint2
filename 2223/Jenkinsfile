@@ -7,15 +7,20 @@ pipeline {
     }
 
     parameters {
-        choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE')
+        // 배포 환경 선택
+        choice(choices: ['dev', 'qa', 'prod'], name: 'PROFILE', description: '배포 환경 선택')
+        // DockerHub 사용자명 입력
+        string(name: 'DOCKERHUB_USERNAME',  defaultValue: '', description: 'DockerHub 사용자명을 입력하세요.')
+        // GitHub  사용자명 입력
+        string(name: 'GITHUB_USERNAME',  defaultValue: '', description: 'GitHub  사용자명을 입력하세요.')
     }
 
     environment {
-        // 본인의 username으로 하실 분은 수정해주세요.
-        DOCKERHUB_USERNAME = '1pro'
-        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+        // DOCKERHUB_USERNAME = ""
+        // GITHUB_USERNAME = ""
 
-        // 실습 넘버링
+        // 아래 부분 수정(x)
+        GITHUB_URL = "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-sprint2.git"
         CLASS_NUM = '2223'
     }
 
@@ -29,6 +34,7 @@ pipeline {
 
         stage('소스 빌드') {
             steps {
+                // 빌드 배포가 중요한 건 아니기 때문에 실제 실행되지 않도록 echo 명령을 사용
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
                 echo "chmod +x ./gradlew"
                 echo "gradle clean build"

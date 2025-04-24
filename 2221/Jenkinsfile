@@ -6,16 +6,35 @@ pipeline {
         jdk 'jdk-17'
     }
 
-    environment {
-        // 본인의 username으로 하실 분은 수정해주세요.
-        DOCKERHUB_USERNAME = '1pro'
-        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+    parameters {
+        // DockerHub 사용자명 입력
+        string(name: 'DOCKERHUB_USERNAME',  defaultValue: '', description: 'DockerHub 사용자명을 입력하세요.')
+        // GitHub  사용자명 입력
+        string(name: 'GITHUB_USERNAME',  defaultValue: '', description: 'GitHub  사용자명을 입력하세요.')
+    }
 
-        // 실습 넘버링
+    environment {
+        // 전역값을 넣어 두시면 위 parameters 입력이 필요 없어요. (전체 Jenkinfile에서 해당 내용을 모두 수정해 놓으면 좋습니다.)
+        // DOCKERHUB_USERNAME = ""
+        // GITHUB_USERNAME = ""
+
+        // 아래 부분 수정(x)
+        GITHUB_URL = "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-sprint2.git"
         CLASS_NUM = '2221'
     }
 
     stages {
+
+        stage('Username 확인') {
+            steps {
+                script {
+                    if (!env.DOCKERHUB_USERNAME?.trim() || !env.GITHUB_USERNAME?.trim()) {
+                        error "[파라미터와 함께 빌드]에 GITHUB_USERNAME를 본인의 username으로 입력해 주세요! 매번 입력이 번거롭다면 Jenkinsfile에서 parameters에 입력 항목을 삭제 하시고 environment에 전역값을 넣은 후 해당 조건문은 삭제해 주세요. "
+                    }
+                }
+            }
+        }
+
         stage('소스파일 체크아웃') {
             steps {
                 // 소스코드를 가져올 Github 주소
@@ -25,6 +44,7 @@ pipeline {
 
         stage('소스 빌드') {
             steps {
+                // 빌드 배포가 중요한 건 아니기 때문에 실제 실행되지 않도록 echo 명령을 사용
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
                 echo "chmod +x ./gradlew"
                 echo "gradle clean build"
