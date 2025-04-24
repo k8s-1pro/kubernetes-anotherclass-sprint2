@@ -4,7 +4,7 @@ replicaCount: 1
 image:
   repository: 1pro/api-tester
   pullPolicy: Always
-  tag: "git-250424.104834"
+  tag: 1.0.0
 
 resources:
   limits:
