@@ -16,8 +16,8 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_USERNAME = "1pro"
-        GITHUB_USERNAME = "k8s-1pro"
+        //DOCKERHUB_USERNAME = ""
+        //GITHUB_USERNAME = ""
 
         GITHUB_URL = "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-sprint2.git"
         APP_VERSION = 'git'
@@ -31,68 +31,68 @@ pipeline {
 
 
     stages {
-//         stage('Username 확인') {
-//             steps {
-//                 script {
-//                     if (!env.DOCKERHUB_USERNAME?.trim() || !env.GITHUB_USERNAME?.trim()) {
-//                         error "[파라미터와 함께 빌드]에 DOCKERHUB_USERNAME와 GITHUB_USERNAME를 본인의 username으로 입력해 주세요! 매번 입력이 번거로우 시면 parameters에서 입력 항목을 삭제하시고 environment에 전역값을 넣을 수 있습니다."
-//                     }
-//                 }
-//             }
-//         }
-//
-//         stage('소스파일 체크아웃') {
-//             steps {
-//                 // 소스코드를 가져올 Github 주소
-//                 git branch: 'main', url: "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-api-tester.git"
-//             }
-//         }
-//
-//         stage('소스 빌드') {
-//             steps {
-//                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
-//                 sh "chmod +x ./gradlew"
-//                 sh "gradle clean build"
-//             }
-//         }
-//
-//         stage('릴리즈파일 체크아웃') {
-//             steps {
-//                 checkout scmGit(branches: [[name: '*/main']],
-//                         extensions: [[$class: 'SparseCheckoutPaths',
-//                                       sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
-//                         userRemoteConfigs: [[url: "${GITHUB_URL}"]])
-//             }
-//         }
-//
-//         stage('컨테이너 빌드 및 업로드') {
-//             steps {
-//                 // jar 파일 복사
-//                 sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
-//
-//                 script{
-//
-//                     // 도커 로그인
-//                     withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-//                         sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
-//                     }
-//
-//                     // 도커 빌드 및 업로드
-//                     sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-//                     sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-//
-//                     // 도커 이미지 삭제
-//                     sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
-//                 }
-//             }
-//
-//             post {
-//                 always {
-//                     // 도커 로그아웃
-//                     sh "docker logout"
-//                 }
-//             }
-//         }
+        stage('Username 확인') {
+            steps {
+                script {
+                    if (!env.DOCKERHUB_USERNAME?.trim() || !env.GITHUB_USERNAME?.trim()) {
+                        error "[파라미터와 함께 빌드]에 DOCKERHUB_USERNAME와 GITHUB_USERNAME를 본인의 username으로 입력해 주세요! 매번 입력이 번거로우 시면 parameters에서 입력 항목을 삭제하시고 environment에 전역값을 넣을 수 있습니다."
+                    }
+                }
+            }
+        }
+
+        stage('소스파일 체크아웃') {
+            steps {
+                // 소스코드를 가져올 Github 주소
+                git branch: 'main', url: "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-api-tester.git"
+            }
+        }
+
+        stage('소스 빌드') {
+            steps {
+                // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
+                sh "chmod +x ./gradlew"
+                sh "gradle clean build"
+            }
+        }
+
+        stage('릴리즈파일 체크아웃') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']],
+                        extensions: [[$class: 'SparseCheckoutPaths',
+                                      sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+                        userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+            }
+        }
+
+        stage('컨테이너 빌드 및 업로드') {
+            steps {
+                // jar 파일 복사
+                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+
+                script{
+
+                    // 도커 로그인
+                    withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
+                    }
+
+                    // 도커 빌드 및 업로드
+                    sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                    sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+
+                    // 도커 이미지 삭제
+                    sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+                }
+            }
+
+            post {
+                always {
+                    // 도커 로그아웃
+                    sh "docker logout"
+                }
+            }
+        }
 
         stage('Helm values 파일 업데이트 및 GitHub 푸시') {
             steps {
@@ -104,7 +104,6 @@ pipeline {
 
                     // image.tag 값 수정
                     sh """
-                        echo ${valuesFile}
                         sed -i 's|^  repository:.*|  repository: ${DOCKERHUB_USERNAME}/api-tester|' ${valuesFile}
                         sed -i 's|^  tag:.*|  tag: "${TAG}"|' ${valuesFile}
                     """
