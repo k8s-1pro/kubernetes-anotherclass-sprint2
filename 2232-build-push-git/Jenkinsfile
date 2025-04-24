@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     if (!env.DOCKERHUB_USERNAME?.trim() || !env.GITHUB_USERNAME?.trim()) {
-                        error "[파라미터와 함께 빌드]에 DOCKERHUB_USERNAME와 GITHUB_USERNAME를 본인의 username으로 입력해 주세요! 매번 입력이 번거로우 시면 parameters에서 입력 항목을 삭제하시고 environment에 전역값을 넣을 수 있습니다."
+                        error "[파라미터와 함께 빌드]에 DOCKERHUB_USERNAME와 GITHUB_USERNAME를 본인의 username으로 입력해 주세요! 매번 입력이 번거롭다면 Jenkinsfile에서 parameters에 입력 항목을 삭제 하시고 environment에 전역값을 넣을 수 있습니다."
                     }
                 }
             }
@@ -98,21 +98,21 @@ pipeline {
             steps {
                 script {
 
-
                     def valuesFile = "./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml"
 
-
-                    // image.tag 값 수정
+                    // image 수정
                     sh """
                         sed -i 's|^  repository:.*|  repository: ${DOCKERHUB_USERNAME}/api-tester|' ${valuesFile}
                         sed -i 's|^  tag:.*|  tag: "${TAG}"|' ${valuesFile}
                     """
-                    withCredentials([usernamePassword(credentialsId: 'github_token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+
+                    // github로 업데이트
+                    withCredentials([usernamePassword(credentialsId: 'github_token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh """
                             git config user.email "${GITHUB_USERNAME}@email.com"
                             git config user.name "${GITHUB_USERNAME}"
 
-                            git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-sprint2.git
+                            git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-sprint2.git
 
                             git add ${valuesFile}
                             git commit -m "Update ${valuesFile} with new image tag: ${TAG}"
