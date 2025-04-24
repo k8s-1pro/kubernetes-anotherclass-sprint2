@@ -26,19 +26,18 @@ pipeline {
         CLASS_NUM = '2232-build-push-git'
     }
 
+
     stages {
         stage('Username 확인') {
             steps {
                 script {
                     if (!env.DOCKERHUB_USERNAME?.trim() || !env.GITHUB_USERNAME?.trim()) {
-                        error "❌ DOCKERHUB_USERNAME와 GITHUB_USERNAME를 본인의 username으로 입력해 주세요!"
+                        error "DOCKERHUB_USERNAME와 GITHUB_USERNAME를 본인의 username으로 입력해 주세요!"
                     }
                 }
             }
         }
-    }
 
-    stages {
         stage('소스파일 체크아웃') {
             steps {
                 // 소스코드를 가져올 Github 주소
