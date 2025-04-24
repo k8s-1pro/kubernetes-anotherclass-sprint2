@@ -6,16 +6,34 @@ pipeline {
         jdk 'jdk-17'
     }
 
-    environment {
-        // 본인의 username으로 하실 분은 수정해주세요.
-        DOCKERHUB_USERNAME = '1pro'
-        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+    parameters {
+        // DockerHub 사용자명 입력
+        string(name: 'DOCKERHUB_USERNAME',  defaultValue: '', description: 'DockerHub 사용자명을 입력하세요.')
+        // GitHub  사용자명 입력
+        string(name: 'GITHUB_USERNAME',  defaultValue: '', description: 'GitHub  사용자명을 입력하세요.')
+    }
 
-        // 실습 넘버링
+    environment {
+        // DOCKERHUB_USERNAME = ""
+        // GITHUB_USERNAME = ""
+
+        // 아래 부분 수정(x)
+        GITHUB_URL = "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-sprint2.git"
         CLASS_NUM = '2212'
     }
     
     stages {
+
+        stage('Username 확인') {
+            steps {
+                script {
+                    if (!env.DOCKERHUB_USERNAME?.trim() || !env.GITHUB_USERNAME?.trim()) {
+                        error "[파라미터와 함께 빌드]에 DOCKERHUB_USERNAME와 GITHUB_USERNAME를 본인의 username으로 입력해 주세요! 매번 입력이 번거롭다면 Jenkinsfile에서 parameters에 입력 항목을 삭제 하시고 environment에 전역값을 넣을 수 있습니다."
+                    }
+                }
+            }
+        }
+
         stage('소스파일 체크아웃') {
             steps {
                 // 소스코드를 가져올 Github 주소
@@ -53,13 +71,8 @@ pipeline {
         stage('컨테이너 업로드') {
             steps {
                 // DockerHub로 이미지 업로드
-                script{
-                    if (DOCKERHUB_USERNAME == "1pro") {
-                        echo "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
-                    } else {
-                        sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
-                    }
-                }
+                // 항상 본인의 Docker Hub에서 빌드가 되도록 수정 됨
+                sh "docker push ${DOCKERHUB_USERNAME}/api-tester:v1.0.0"
             }
         }
 
