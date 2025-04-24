@@ -44,7 +44,7 @@ pipeline {
         stage('소스파일 체크아웃') {
             steps {
                 // 소스코드를 가져올 Github 주소
-                git branch: 'main', url: "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-api-tester.git"
+                git branch: 'main', url: "https://github.com/k8s-1pro/kubernetes-anotherclass-api-tester.git"
             }
         }
 
