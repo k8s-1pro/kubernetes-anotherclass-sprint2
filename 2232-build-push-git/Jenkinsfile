@@ -103,11 +103,11 @@ pipeline {
 
 
                     // image.tag 값 수정
-                    sh '''
+                    sh """
                         echo ${valuesFile}
                         sed -i 's|^  repository:.*|  repository: ${DOCKERHUB_USERNAME}/api-tester|' ${valuesFile}
                         sed -i 's|^  tag:.*|  tag: "${TAG}"|' ${valuesFile}
-                    '''
+                    """
                     withCredentials([usernamePassword(credentialsId: 'github_token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                         sh """
                             git config user.email "${GITHUB_USERNAME}@email.com"
