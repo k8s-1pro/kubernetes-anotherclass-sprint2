@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: 1pro/api-tester
+  repository: subin4420/api-tester
   pullPolicy: Always
   tag: 1.0.0
 
