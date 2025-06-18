@@ -82,7 +82,7 @@ autoscaling:
 volumes:
   - name: secret-datasource
     secret:
-      secretName: api-tester-2232-postgresql
+      secretName: api-tester-2232-build-push-git-postgresql
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
