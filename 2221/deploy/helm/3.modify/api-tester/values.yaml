@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: 1pro/api-tester:v1.0.0
+  repository: gusrms0978/api-tester:v1.0.0
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
